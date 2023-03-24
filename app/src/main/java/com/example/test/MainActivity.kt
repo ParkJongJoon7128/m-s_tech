@@ -1,13 +1,10 @@
 package com.example.test
 
 import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import java.io.File
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,10 +17,14 @@ class MainActivity : AppCompatActivity() {
         Wife_btn.setOnClickListener {
 
             val intent = packageManager.getLaunchIntentForPackage("com.example.myapplication")
-            if(intent != null) {
+            if (intent != null) {
                 startActivity(intent)
             } else {
-                
+                Toast.makeText(
+                    getApplicationContext(),
+                    "BLE 통신 앱이 설치 되지 않았습니다.",
+                    Toast.LENGTH_SHORT
+                ).show();
             }
 
         }
