@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -17,12 +18,13 @@ class MainActivity : AppCompatActivity() {
         val Wife_btn: Button = findViewById(R.id.Wifi_btn)
 
         Wife_btn.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            val file = File("path/to/AI-thinker test 1.0.1")
-            val uri = Uri.fromFile(file)
-            intent.setDataAndType(uri, "application/vnd.android.package-archive")
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+
+            val intent = packageManager.getLaunchIntentForPackage("com.example.myapplication")
+            if(intent != null) {
+                startActivity(intent)
+            } else {
+                
+            }
 
         }
 
