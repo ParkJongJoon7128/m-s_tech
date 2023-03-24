@@ -20,7 +20,7 @@ class WebviewActivity : AppCompatActivity() {
         webview.webChromeClient = WebChromeClient()
 
         //링크 주소를 Load 함
-        webview.loadUrl("http://175.195.116.3:8219")
+        webview.loadUrl("http://safewing.co.kr")
     }
 
     override fun onBackPressed() {
