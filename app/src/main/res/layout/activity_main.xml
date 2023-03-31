@@ -3,43 +3,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_gravity="center"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <ImageView
+        android:id="@+id/logo"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginTop="150dp"
-        android:id="@+id/logo"
         android:layout_gravity="center"
-        android:src="@drawable/mnstech_logo"/>
+        android:layout_marginTop="150dp"
+        android:src="@drawable/mnstech_logo" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:padding="15dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="15dp">
 
         <Button
             android:id="@+id/Wifi_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
-            android:textSize="24dp"
-            android:text="wifi 설정" />
+            android:background="#00f"
+            android:padding="15dp"
+            android:text="wifi 설정"
+            android:textSize="24dp" />
 
         <Button
             android:id="@+id/Webview_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:textSize="24dp"
-            android:text= "Web 이동"/>
+            android:background="#00f"
+            android:padding="15dp"
+            android:text="Web 이동"
+            android:textSize="24dp" />
     </LinearLayout>
-
 
 
 </LinearLayout>
