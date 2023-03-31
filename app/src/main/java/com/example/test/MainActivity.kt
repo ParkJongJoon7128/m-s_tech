@@ -3,7 +3,6 @@ package com.example.test
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -16,17 +15,19 @@ class MainActivity : AppCompatActivity() {
 
         Wife_btn.setOnClickListener {
 
-            val intent = packageManager.getLaunchIntentForPackage("com.example.myapplication")
-            if (intent != null) {
-                startActivity(intent)
-            } else {
-                Toast.makeText(
-                    getApplicationContext(),
-                    "BLE 통신 앱이 설치 되지 않았습니다.",
-                    Toast.LENGTH_SHORT
-                ).show();
-            }
+            val intent = Intent(this, BLE_Activity::class.java)
+            startActivity(intent)
 
+//            val intent = packageManager.getLaunchIntentForPackage("com.example.myapplication")
+//            if (intent != null) {
+//                startActivity(intent)
+//            } else {
+//                Toast.makeText(
+//                    getApplicationContext(),
+//                    "BLE 통신 앱이 설치 되지 않았습니다.",
+//                    Toast.LENGTH_SHORT
+//                ).show();
+//            }
         }
 
         Webview_btn.setOnClickListener {
