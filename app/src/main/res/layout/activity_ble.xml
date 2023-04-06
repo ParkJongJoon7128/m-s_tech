@@ -7,50 +7,73 @@
     android:orientation="vertical"
     tools:context=".BLE_Activity">
 
-    <Button
-        android:id="@+id/ble_connectBtn"
+<!--    <Button-->
+<!--        android:id="@+id/ble_connectBtn"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:layout_marginBottom="300dp"-->
+<!--        android:background="#00f"-->
+<!--        android:text="기기 연결" />-->
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="SSID"-->
+<!--        android:textColor="@color/black" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/ble_ssid"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="@color/black"-->
+<!--        android:hint="SSID"-->
+<!--        android:textColorHint="@color/black" />-->
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:text="Password"-->
+<!--        android:textColor="@color/black" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/ble_pw"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="@color/black"-->
+<!--        android:hint="Password"-->
+<!--        android:textColorHint="@color/black" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/ble_sendBtn"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:background="#00f"-->
+<!--        android:text="전송" />-->
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="300dp"
-        android:background="#00f"
-        android:text="기기 연결" />
+        android:orientation="horizontal">
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ble_button"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scan_button"
+            android:text="Scan"/>
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SSID"
-        android:textColor="@color/black" />
-
-    <EditText
-        android:id="@+id/ble_ssid"
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
-        android:hint="SSID"
-        android:textColorHint="@color/black" />
+        android:scrollbars="vertical"
+        android:id="@+id/recyclerView"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="Password"
-        android:textColor="@color/black" />
 
-    <EditText
-        android:id="@+id/ble_pw"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
-        android:hint="Password"
-        android:textColorHint="@color/black" />
-
-    <Button
-        android:id="@+id/ble_sendBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:background="#00f"
-        android:text="전송" />
 
 </LinearLayout>
