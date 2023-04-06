@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         Wife_btn.setOnClickListener {
 
-            val intent = Intent(this, BLE_Activity::class.java)
+            val intent = Intent(this, BleActivity::class.java)
             startActivity(intent)
 
 //            val intent = packageManager.getLaunchIntentForPackage("com.example.myapplication")

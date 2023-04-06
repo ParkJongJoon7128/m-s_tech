@@ -26,10 +26,11 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 @SuppressLint("MissingPermission")
-class BLE_Activity : AppCompatActivity() {
+class BleActivity : AppCompatActivity() {
 
     private val REQUEST_ENABLE_BLUETOOTH = 1
-    private val REQUEST_ALL_PERMISSION = 2
+
+    private val REQUEST_ALL_PERMISSIONS = 2
     private val PERMISSIONS = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
 
     private var bluetoothAdapter: BluetoothAdapter? = null
@@ -37,7 +38,7 @@ class BLE_Activity : AppCompatActivity() {
     private var devicesArray = ArrayList<BluetoothDevice>()
     private val SCAN_PERIOD = 1000
     private val handler = Handler()
-
+//
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     private val mLeScanCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -72,7 +73,6 @@ class BLE_Activity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun scanDevice(state: Boolean) = if (state) {
-
         handler.postDelayed({
             scanning = false
             bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
@@ -89,11 +89,7 @@ class BLE_Activity : AppCompatActivity() {
     private fun hasPermissions(context: Context?, permissions: Array<String>): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (permission in permissions) {
-                if (ActivityCompat.checkSelfPermission(
-                        context,
-                        permission
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                     return false
                 }
             }
@@ -101,6 +97,7 @@ class BLE_Activity : AppCompatActivity() {
         return true
     }
 
+    //Permission 확인
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -109,12 +106,12 @@ class BLE_Activity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            REQUEST_ALL_PERMISSION -> {
+            REQUEST_ALL_PERMISSIONS -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show()
                     scanDevice(true)
                 } else {
-                    requestPermissions(permissions, REQUEST_ALL_PERMISSION)
+                    requestPermissions(permissions, REQUEST_ALL_PERMISSIONS)
                     Toast.makeText(this, "Permissions must be granted", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -161,7 +158,7 @@ class BLE_Activity : AppCompatActivity() {
 
         scanBtn.setOnClickListener { v: View? ->
             if (!hasPermissions(this, PERMISSIONS)) {
-                requestPermissions(PERMISSIONS, REQUEST_ALL_PERMISSION)
+                requestPermissions(PERMISSIONS, REQUEST_ALL_PERMISSIONS)
             }
             scanDevice(true)
         }

@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="?attr/selectableItemBackground"
-    tools:context=".BLE_Activity">
+    android:orientation="horizontal"
+    tools:context=".BleActivity">
 
     <TextView
         android:id="@+id/item_name"
@@ -19,8 +19,8 @@
         android:id="@+id/item_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:text="item_name"
+        android:layout_marginLeft="35dp"
+        android:text="item_adress"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:ignore="MissingConstraints" />
 
