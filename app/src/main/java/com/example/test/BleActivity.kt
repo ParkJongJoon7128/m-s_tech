@@ -3,6 +3,7 @@ package com.example.test
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
@@ -16,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import android.widget.AdapterView.OnItemClickListener
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -41,6 +43,9 @@ class BleActivity : AppCompatActivity() {
 
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
+
+    private var bleGatt: BluetoothGatt? = null
+    private var mContext: Context? = null
 
     private val mLeScanCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     object : ScanCallback() {
@@ -126,12 +131,22 @@ class BleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ble)
 
+        mContext = this
+
         val bluetooth_button: ToggleButton = findViewById(R.id.bluetooth_btn)
         val scan_button: Button = findViewById(R.id.scan_button)
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         viewManager = LinearLayoutManager(this)
         recyclerViewAdapter = RecyclerViewAdapter(deviceArr)
+        recyclerViewAdapter.mListener = object : RecyclerViewAdapter.OnItemClickListener {
+            override fun onClick(view: View, position: Int) {
+                scanDevice(false)
+                val device = deviceArr.get(position)
+                bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
+            }
+        }
+
         val recyclerView = findViewById<RecyclerView?>(R.id.recyclerView).apply {
             layoutManager = viewManager
             adapter = recyclerViewAdapter
@@ -153,6 +168,12 @@ class BleActivity : AppCompatActivity() {
                 View.INVISIBLE
             } else {
                 View.VISIBLE
+            }
+
+            if(scan_button.visibility == View.INVISIBLE) {
+                scanDevice(false)
+                deviceArr.clear()
+                recyclerViewAdapter.notifyDataSetChanged()
             }
         }
 
@@ -179,6 +200,13 @@ class BleActivity : AppCompatActivity() {
 
     class RecyclerViewAdapter(private val myDataset: ArrayList<BluetoothDevice>) :
         RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {
+
+        var mListener: OnItemClickListener? = null
+
+        interface OnItemClickListener{
+            fun onClick(view: View, position: Int)
+        }
+
         class MyViewHolder(val linearView: LinearLayout) : RecyclerView.ViewHolder(linearView)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -193,6 +221,11 @@ class BleActivity : AppCompatActivity() {
             val itemAddress: TextView = holder.linearView.findViewById(R.id.item_address)
             itemName.text = myDataset[position].name
             itemAddress.text = myDataset[position].address
+            if(mListener != null) {
+                holder?.linearView?.setOnClickListener { v ->
+                    mListener?.onClick(v, position)
+                }
+            }
         }
 
         override fun getItemCount(): Int = myDataset.size
