@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:orientation="horizontal"
+    android:padding="25dp"
     tools:context=".BleActivity">
 
     <TextView
@@ -12,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="item_name"
+        android:textColor="@color/black"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:ignore="MissingConstraints" />
 
@@ -21,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="35dp"
         android:text="item_adress"
+        android:textColor="@color/black"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:ignore="MissingConstraints" />
 

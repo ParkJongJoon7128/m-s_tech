@@ -76,7 +76,7 @@ class BleActivity : AppCompatActivity() {
         handler.postDelayed({
             scanning = false
             bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
-        }, SCAN_PERIOD.toLong())
+        }, SCAN_PERIOD)
         scanning = true
         deviceArr.clear()
         bluetoothAdapter?.bluetoothLeScanner?.startScan(mLeScanCallback)
@@ -198,3 +198,5 @@ class BleActivity : AppCompatActivity() {
         override fun getItemCount(): Int = myDataset.size
     }
 }
+
+private fun Handler.postDelayed(function: () -> Unit, scanPeriod: Int) {}

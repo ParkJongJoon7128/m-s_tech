@@ -26,13 +26,13 @@ class MainActivity : AppCompatActivity() {
 }
 
 
-//            val intent = packageManager.getLaunchIntentForPackage("com.example.myapplication")
-//            if (intent != null) {
-//                startActivity(intent)
-//            } else {
-//                Toast.makeText(
-//                    getApplicationContext(),
-//                    "BLE 통신 앱이 설치 되지 않았습니다.",
-//                    Toast.LENGTH_SHORT
-//                ).show();
-//            }
+//val intent = packageManager.getLaunchIntentForPackage("com.example.myapplication")
+//if (intent != null) {
+//    startActivity(intent)
+//} else {
+//    Toast.makeText(
+//        getApplicationContext(),
+//        "BLE 통신 앱이 설치 되지 않았습니다.",
+//        Toast.LENGTH_SHORT
+//    ).show();
+//}
