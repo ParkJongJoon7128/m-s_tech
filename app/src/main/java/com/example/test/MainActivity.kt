@@ -10,13 +10,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val Ble_btn: Button = findViewById(R.id.Ble_btn)
         val Webview_btn: Button = findViewById(R.id.Webview_btn)
-        val Wife_btn: Button = findViewById(R.id.Wifi_btn)
 
-        Wife_btn.setOnClickListener {
-
+        Ble_btn.setOnClickListener {
             val intent = Intent(this, BleActivity::class.java)
             startActivity(intent)
+        }
+
+        Webview_btn.setOnClickListener {
+            val intent = Intent(this, WebviewActivity::class.java)
+            startActivity(intent)
+        }
+    }
+}
+
 
 //            val intent = packageManager.getLaunchIntentForPackage("com.example.myapplication")
 //            if (intent != null) {
@@ -28,11 +36,3 @@ class MainActivity : AppCompatActivity() {
 //                    Toast.LENGTH_SHORT
 //                ).show();
 //            }
-        }
-
-        Webview_btn.setOnClickListener {
-            val intent = Intent(this, WebviewActivity::class.java)
-            startActivity(intent)
-        }
-    }
-}

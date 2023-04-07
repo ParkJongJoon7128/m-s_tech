@@ -24,13 +24,13 @@
         android:padding="15dp">
 
         <Button
-            android:id="@+id/Wifi_btn"
+            android:id="@+id/Ble_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
             android:background="#00f"
             android:padding="15dp"
-            android:text="wifi 설정"
+            android:text="BLE 통신"
             android:textSize="24dp" />
 
         <Button
