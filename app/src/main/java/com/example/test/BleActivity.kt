@@ -53,6 +53,9 @@ class BleActivity : AppCompatActivity() {
 
 //    private var builder = AlertDialog.Builder(this)
 
+//    private val wifiManager: WifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
+//    private val wifiInfo = wifiManager.connectionInfo.ssid
+
 
     private val mLeScanCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     object : ScanCallback() {
@@ -152,13 +155,17 @@ class BleActivity : AppCompatActivity() {
                 val device = deviceArr.get(position)
                 bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
 
-                // Dialog 띄우는 코드 추가
+//                // Dialog 띄우는 코드 추가
                 val builder = AlertDialog.Builder(mContext)
                 val dialogView = layoutInflater.inflate(R.layout.dialog_wifimanager, null)
-                val ssid = dialogView.findViewById<EditText>(R.id.ble_ssid)
-                val pw = dialogView.findViewById<EditText>(R.id.ble_pw)
-//                 val wifiManager: WifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-//                 val wifiInfo = wifiManager.connectionInfo.ssid
+                val ble_ssid = dialogView.findViewById<EditText>(R.id.ble_ssid)
+                val ble_pw = dialogView.findViewById<EditText>(R.id.ble_pw)
+
+                val wifiManager = mContext?.applicationContext?.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                val wifiInfo = wifiManager.connectionInfo
+                val ssid = wifiInfo.ssid.replace("\"", "")
+
+                ble_ssid.setText(ssid)
 
                 builder.setView(dialogView)
                     .setPositiveButton("연결") { dialog, _ ->
