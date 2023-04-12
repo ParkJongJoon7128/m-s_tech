@@ -1,6 +1,8 @@
 package com.example.test
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.app.LocaleConfig
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
@@ -9,6 +11,8 @@ import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -46,6 +50,9 @@ class BleActivity : AppCompatActivity() {
 
     private var bleGatt: BluetoothGatt? = null
     private var mContext: Context? = null
+
+//    private var builder = AlertDialog.Builder(this)
+
 
     private val mLeScanCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     object : ScanCallback() {
@@ -144,6 +151,25 @@ class BleActivity : AppCompatActivity() {
                 scanDevice(false)
                 val device = deviceArr.get(position)
                 bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
+
+                // Dialog 띄우는 코드 추가
+                val builder = AlertDialog.Builder(mContext)
+                val dialogView = layoutInflater.inflate(R.layout.dialog_wifimanager, null)
+                val ssid = dialogView.findViewById<EditText>(R.id.ble_ssid)
+                val pw = dialogView.findViewById<EditText>(R.id.ble_pw)
+//                 val wifiManager: WifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
+//                 val wifiInfo = wifiManager.connectionInfo.ssid
+
+                builder.setView(dialogView)
+                    .setPositiveButton("연결") { dialog, _ ->
+                        dialog.dismiss()
+                        // 연결 확인 버튼을 누른 경우의 동작 추가
+                    }
+                    .setNegativeButton("취소") { dialog, _ ->
+                        dialog.dismiss()
+                        // 취소 버튼을 누른 경우의 동작 추가
+                    }
+                builder.create().show()
             }
         }
 
