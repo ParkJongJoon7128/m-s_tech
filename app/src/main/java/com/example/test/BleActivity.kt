@@ -28,6 +28,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.nio.charset.Charset
+import java.util.UUID
 
 @SuppressLint("MissingPermission")
 class BleActivity : AppCompatActivity() {
@@ -50,12 +52,6 @@ class BleActivity : AppCompatActivity() {
 
     private var bleGatt: BluetoothGatt? = null
     private var mContext: Context? = null
-
-//    private var builder = AlertDialog.Builder(this)
-
-//    private val wifiManager: WifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-//    private val wifiInfo = wifiManager.connectionInfo.ssid
-
 
     private val mLeScanCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     object : ScanCallback() {
@@ -155,7 +151,7 @@ class BleActivity : AppCompatActivity() {
                 val device = deviceArr.get(position)
                 bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
 
-//                // Dialog 띄우는 코드 추가
+                // Dialog 띄우는 코드 추가
                 val builder = AlertDialog.Builder(mContext)
                 val dialogView = layoutInflater.inflate(R.layout.dialog_wifimanager, null)
                 val ble_ssid = dialogView.findViewById<EditText>(R.id.ble_ssid)
@@ -167,10 +163,28 @@ class BleActivity : AppCompatActivity() {
 
                 ble_ssid.setText(ssid)
 
+
+
                 builder.setView(dialogView)
                     .setPositiveButton("연결") { dialog, _ ->
-                        dialog.dismiss()
                         // 연결 확인 버튼을 누른 경우의 동작 추가
+                        val send_ssid = ble_ssid.setText(ssid).toString()
+                        val send_pw = ble_pw.text.toString()
+
+                        val data = byteArrayOf(
+                            send_ssid.length.toByte(), *send_ssid.toByteArray(Charsets.UTF_8),
+                            send_pw.length.toByte(), *send_pw.toByteArray(Charsets.UTF_8)
+                        )
+
+                        val serviceUUID = UUID.fromString("SERVICE_UUID")
+                        val characteristicUuid = UUID.fromString("CHARACTERISTIC_UUID")
+                        val service = bleGatt?.getService(serviceUUID)
+                        val characteristic = service?.getCharacteristic(characteristicUuid)
+
+                        characteristic?.value = data
+                        bleGatt?.writeCharacteristic(characteristic)
+
+                        dialog.dismiss()
                     }
                     .setNegativeButton("취소") { dialog, _ ->
                         dialog.dismiss()
