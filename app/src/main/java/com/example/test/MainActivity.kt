@@ -1,6 +1,7 @@
 package com.example.test
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +20,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         Webview_btn.setOnClickListener {
-            val intent = Intent(this, WebviewActivity::class.java)
+//            val intent = Intent(this, WebviewActivity::class.java)
+//            startActivity(intent)
+
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://safewing.co.kr"))
             startActivity(intent)
         }
     }
