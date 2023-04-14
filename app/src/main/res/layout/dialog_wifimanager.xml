@@ -19,8 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="SSID"
-        android:textColor="@color/black"
-        android:textColorHint="@color/black" />
+        android:enabled="false"
+        android:textColor="#dfdfdf"
+        android:textColorHint="#dfdfdf" />
 
 
     <TextView
@@ -37,6 +38,6 @@
         android:layout_height="wrap_content"
         android:hint="PassWord"
         android:textColor="@color/black"
-        android:textColorHint="@color/black" />
+        android:textColorHint="#dfdfdf" />
 
 </LinearLayout>

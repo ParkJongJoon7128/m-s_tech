@@ -112,7 +112,6 @@ class BleActivity : AppCompatActivity() {
     }
 
 
-
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -157,32 +156,47 @@ class BleActivity : AppCompatActivity() {
                 val ble_ssid = dialogView.findViewById<EditText>(R.id.ble_ssid)
                 val ble_pw = dialogView.findViewById<EditText>(R.id.ble_pw)
 
-                val wifiManager = mContext?.applicationContext?.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                val wifiManager =
+                    mContext?.applicationContext?.getSystemService(Context.WIFI_SERVICE) as WifiManager
                 val wifiInfo = wifiManager.connectionInfo
                 val ssid = wifiInfo.ssid.replace("\"", "")
 
                 ble_ssid.setText(ssid)
 
-
-
                 builder.setView(dialogView)
                     .setPositiveButton("연결") { dialog, _ ->
                         // 연결 확인 버튼을 누른 경우의 동작 추가
-                        val send_ssid = ble_ssid.setText(ssid).toString()
+
+                        // val send_ssid = ble_ssid.setText(ssid).toString()
+
+                        val send_ssid = ble_ssid.text.toString()
                         val send_pw = ble_pw.text.toString()
 
                         val data = byteArrayOf(
-                            send_ssid.length.toByte(), *send_ssid.toByteArray(Charsets.UTF_8),
-                            send_pw.length.toByte(), *send_pw.toByteArray(Charsets.UTF_8)
+                            send_ssid.length.toByte(), *send_ssid.toByteArray(Charsets.US_ASCII),
+                            send_pw.length.toByte(), *send_pw.toByteArray(Charsets.US_ASCII)
                         )
 
-                        val serviceUUID = UUID.fromString("SERVICE_UUID")
-                        val characteristicUuid = UUID.fromString("CHARACTERISTIC_UUID")
+                        val services = bleGatt?.services
+                        val service_uuid = services?.get(0)?.uuid.toString()
+                        val characteristics_uuid = services?.get(0)?.characteristics?.get(0)?.uuid.toString()
+
+                        val serviceUUID = UUID.fromString(service_uuid)
+                        val characteristicUUID = UUID.fromString(characteristics_uuid)
+
                         val service = bleGatt?.getService(serviceUUID)
-                        val characteristic = service?.getCharacteristic(characteristicUuid)
+                        val characteristic = service?.getCharacteristic(characteristicUUID)
 
                         characteristic?.value = data
                         bleGatt?.writeCharacteristic(characteristic)
+
+                        Log.d("uuids", "serviceUUID: $serviceUUID, characteristicUUID: $characteristicUUID")
+
+//                        val characteristic = bleGatt?.getService(UUID.fromString(service_uuid.toString()))
+//                            ?.getCharacteristic(UUID.fromString(characteristics_uuid.toString()))
+//                        characteristic?.setValue(send_ssid + send_pw)
+//
+//                        bleGatt?.writeCharacteristic(characteristic)
 
                         dialog.dismiss()
                     }
@@ -190,7 +204,7 @@ class BleActivity : AppCompatActivity() {
                         dialog.dismiss()
                         // 취소 버튼을 누른 경우의 동작 추가
                     }
-                builder.create().show()
+                    .show()
             }
         }
 
@@ -217,7 +231,7 @@ class BleActivity : AppCompatActivity() {
                 View.VISIBLE
             }
 
-            if(scan_button.visibility == View.INVISIBLE) {
+            if (scan_button.visibility == View.INVISIBLE) {
                 scanDevice(false)
                 deviceArr.clear()
                 recyclerViewAdapter.notifyDataSetChanged()
@@ -250,7 +264,7 @@ class BleActivity : AppCompatActivity() {
 
         var mListener: OnItemClickListener? = null
 
-        interface OnItemClickListener{
+        interface OnItemClickListener {
             fun onClick(view: View, position: Int)
         }
 
@@ -268,7 +282,7 @@ class BleActivity : AppCompatActivity() {
             val itemAddress: TextView = holder.linearView.findViewById(R.id.item_address)
             itemName.text = myDataset[position].name
             itemAddress.text = myDataset[position].address
-            if(mListener != null) {
+            if (mListener != null) {
                 holder?.linearView?.setOnClickListener { v ->
                     mListener?.onClick(v, position)
                 }
