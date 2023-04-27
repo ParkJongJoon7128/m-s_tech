@@ -1,10 +1,7 @@
 package com.example.test
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothProfile
+import android.bluetooth.*
 import android.content.Context
 import android.os.Build
 import android.os.Handler
@@ -32,6 +29,7 @@ class DeviceControlActivity(
                         TAG,
                         "Attempting to start service discovery: ${bluetoothGatt?.discoverServices()}"
                     )
+                    gatt?.discoverServices()
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
                     Log.i(TAG, "Disconnected to GATT server.")

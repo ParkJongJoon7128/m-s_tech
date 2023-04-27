@@ -53,6 +53,9 @@ class BleActivity : AppCompatActivity() {
     private var bleGatt: BluetoothGatt? = null
     private var mContext: Context? = null
 
+    private val serviceUUID = UUID.fromString("55e405d2-af9f-a98f-e54a-7dfe43535355")
+    private val characteristicUUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
+
     private val mLeScanCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     object : ScanCallback() {
         override fun onScanFailed(errorCode: Int) {
@@ -167,36 +170,20 @@ class BleActivity : AppCompatActivity() {
                     .setPositiveButton("연결") { dialog, _ ->
                         // 연결 확인 버튼을 누른 경우의 동작 추가
 
-                        // val send_ssid = ble_ssid.setText(ssid).toString()
-
                         val send_ssid = ble_ssid.text.toString()
                         val send_pw = ble_pw.text.toString()
+                        val SP = ","
+                        val CR = "\r"
+                        val LF = "\n"
 
-                        val data = byteArrayOf(
-                            send_ssid.length.toByte(), *send_ssid.toByteArray(Charsets.US_ASCII),
-                            send_pw.length.toByte(), *send_pw.toByteArray(Charsets.US_ASCII)
-                        )
-
-                        val services = bleGatt?.services
-                        val service_uuid = services?.get(0)?.uuid.toString()
-                        val characteristics_uuid = services?.get(0)?.characteristics?.get(0)?.uuid.toString()
-
-                        val serviceUUID = UUID.fromString(service_uuid)
-                        val characteristicUUID = UUID.fromString(characteristics_uuid)
+                        val sumData = send_ssid + SP + send_pw + CR + LF
+                        val result = sumData.toByteArray()
 
                         val service = bleGatt?.getService(serviceUUID)
                         val characteristic = service?.getCharacteristic(characteristicUUID)
 
-                        characteristic?.value = data
+                        characteristic?.value = result
                         bleGatt?.writeCharacteristic(characteristic)
-
-                        Log.d("uuids", "serviceUUID: $serviceUUID, characteristicUUID: $characteristicUUID")
-
-//                        val characteristic = bleGatt?.getService(UUID.fromString(service_uuid.toString()))
-//                            ?.getCharacteristic(UUID.fromString(characteristics_uuid.toString()))
-//                        characteristic?.setValue(send_ssid + send_pw)
-//
-//                        bleGatt?.writeCharacteristic(characteristic)
 
                         dialog.dismiss()
                     }
