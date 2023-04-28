@@ -26,6 +26,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.Integer.min
@@ -157,7 +158,7 @@ class BleActivity : AppCompatActivity() {
                 // Dialog 띄우는 코드 추가
                 val builder = AlertDialog.Builder(mContext)
                 val dialogView = layoutInflater.inflate(R.layout.dialog_wifimanager, null)
-                val ble_ssid = dialogView.findViewById<EditText>(R.id.ble_ssid)
+                val ble_ssid = dialogView.findViewById<TextView>(R.id.ble_ssid)
                 val ble_pw = dialogView.findViewById<EditText>(R.id.ble_pw)
 
                 val wifiManager =
@@ -165,7 +166,7 @@ class BleActivity : AppCompatActivity() {
                 val wifiInfo = wifiManager.connectionInfo
                 val ssid = wifiInfo.ssid.replace("\"", "")
 
-                ble_ssid.setText(ssid)
+                ble_ssid.text = ssid
 
                 builder.setView(dialogView)
                     .setPositiveButton("연결") { dialog, _ ->
@@ -189,8 +190,10 @@ class BleActivity : AppCompatActivity() {
                         } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
                             val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
                             for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
-                                val packetSize = if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
-                                val packet = result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
+                                val packetSize =
+                                    if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
+                                val packet =
+                                    result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
                                 characteristic?.value = packet
                                 bleGatt?.writeCharacteristic(characteristic)
                                 Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
@@ -209,7 +212,7 @@ class BleActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView?>(R.id.recyclerView).apply {
             layoutManager = viewManager
             adapter = recyclerViewAdapter
-        }
+        }.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
 
         if (bluetoothAdapter != null) {
             if (bluetoothAdapter?.isEnabled == false) {
@@ -288,18 +291,6 @@ class BleActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int = myDataset.size
-    }
-
-    private fun packetize(data: ByteArray, maxLength: Int): List<ByteArray> {
-        val packets = mutableListOf<ByteArray>()
-        var offset = 0
-        while (offset < data.size) {
-            val packetLength = minOf(maxLength, data.size - offset)
-            val packet = data.copyOfRange(offset, offset + packetLength)
-            packets.add(packet)
-            offset += packetLength
-        }
-        return packets
     }
 }
 

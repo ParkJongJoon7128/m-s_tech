@@ -21,7 +21,6 @@ class WebviewActivity : AppCompatActivity() {
         webview.settings.javaScriptEnabled = true // 자바스크립트 허용
 
         //웹뷰에서 새 창이 뜨지 않도록 방지하는 구문
-        webview.webViewClient = WebViewClient()
         webview.webChromeClient = WebChromeClient()
 
         //링크 주소를 Load 함
@@ -32,8 +31,7 @@ class WebviewActivity : AppCompatActivity() {
                 if (url == null) return false
                 if (!url.startsWith("http://") && !url.startsWith("https://")) {
                     if (url.startsWith("intent")) {
-                        val schemeIntent: Intent
-                        schemeIntent = try {
+                        val schemeIntent: Intent = try {
                             Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
                         } catch (e: URISyntaxException) {
                             e.printStackTrace()

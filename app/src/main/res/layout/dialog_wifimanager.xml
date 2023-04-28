@@ -10,27 +10,20 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SSID"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:text="Enter the password for AP"
         android:textColor="@color/black"
-        android:textSize="30dp" />
+        android:textSize="24dp" />
 
-    <EditText
+    <TextView
         android:id="@+id/ble_ssid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="SSID"
-        android:enabled="false"
-        android:textColor="#dfdfdf"
-        android:textColorHint="#dfdfdf" />
-
-
-    <TextView
-        android:layout_marginTop="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="PassWord"
+        android:gravity="center"
+        android:text="SSID"
         android:textColor="@color/black"
-        android:textSize="30dp" />
+        android:textSize="24dp" />
 
     <EditText
         android:id="@+id/ble_pw"
