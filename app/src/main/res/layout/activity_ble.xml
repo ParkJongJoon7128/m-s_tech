@@ -10,19 +10,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_marginTop="35dp"
         android:orientation="horizontal">
 
         <ToggleButton
             android:id="@+id/bluetooth_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bluetooth ON/OFF" />
+            android:textOff="연결 끊기"
+            android:textOn="기기 연결" />
 
         <Button
             android:id="@+id/scan_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Scan"
+            android:text="기기 탐색"
             android:visibility="invisible" />
     </LinearLayout>
 
@@ -30,7 +32,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         android:scrollbars="vertical" />
 
 
