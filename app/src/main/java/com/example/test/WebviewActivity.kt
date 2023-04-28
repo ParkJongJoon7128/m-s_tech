@@ -1,10 +1,15 @@
 package com.example.test
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import java.net.URISyntaxException
 
 class WebviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +26,49 @@ class WebviewActivity : AppCompatActivity() {
 
         //링크 주소를 Load 함
         webview.loadUrl("http://safewing.co.kr")
+
+        webview.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                if (url == null) return false
+                if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                    if (url.startsWith("intent")) {
+                        val schemeIntent: Intent
+                        schemeIntent = try {
+                            Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
+                        } catch (e: URISyntaxException) {
+                            e.printStackTrace()
+                            return false
+                        }
+                        try {
+                            startActivity(schemeIntent)
+                            return true
+                        } catch (e: ActivityNotFoundException) {
+                            val pkgName = schemeIntent.getPackage()
+                            if (pkgName != null) {
+                                startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("market://details?id=$pkgName")
+                                    )
+                                )
+                                return true
+                            }
+                        }
+                    } else {
+                        return try {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                            true
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            false
+                        }
+                    }
+                }
+                return false
+            }
+        }
     }
+
 
     override fun onBackPressed() {
         val webview: WebView = findViewById(R.id.Webview)

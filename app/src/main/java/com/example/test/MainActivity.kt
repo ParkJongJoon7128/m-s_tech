@@ -20,16 +20,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         Webview_btn.setOnClickListener {
-
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://safewing.co.kr"))
+            val intent = Intent(this, WebviewActivity::class.java)
             startActivity(intent)
         }
     }
 }
 
-//            val intent = Intent(this, WebviewActivity::class.java)
+//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://safewing.co.kr"))
 //            startActivity(intent)
-
 
 //val intent = packageManager.getLaunchIntentForPackage("com.example.myapplication")
 //if (intent != null) {
