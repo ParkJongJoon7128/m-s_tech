@@ -9,6 +9,7 @@ import android.net.http.SslError
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Message
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.webkit.*
 import java.net.URISyntaxException
@@ -32,7 +33,31 @@ class WebviewActivity : AppCompatActivity() {
             settings.javaScriptCanOpenWindowsAutomatically = true
 
             // 웹뷰에서 새 창이 뜨지 않도록 방지하는 구문
-            this.webChromeClient = WebChromeClient()
+            this.webChromeClient = object: WebChromeClient(){
+                override fun onCreateWindow(view: WebView?, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean {
+                    val newWebView = WebView(this@WebviewActivity).apply {
+                        webViewClient = WebViewClient()
+                        settings.javaScriptEnabled = true
+                    }
+
+                    val dialog = Dialog(this@WebviewActivity).apply {
+                        setContentView(newWebView)
+                        window!!.attributes.width = ViewGroup.LayoutParams.MATCH_PARENT
+                        window!!.attributes.height = ViewGroup.LayoutParams.MATCH_PARENT
+                        show()
+                    }
+
+                    newWebView.webChromeClient = object : WebChromeClient() {
+                        override fun onCloseWindow(window: WebView?) {
+                            dialog.dismiss()
+                        }
+                    }
+
+                    (resultMsg?.obj as WebView.WebViewTransport).webView = newWebView
+                    resultMsg.sendToTarget()
+                    return true
+                }
+            }
 
             // 새 창 띄우기 허용
             this.settings.setSupportMultipleWindows(true)
