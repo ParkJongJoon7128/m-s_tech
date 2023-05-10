@@ -10,4 +10,6 @@
 
     <color name="toggle_button_on">#ee8da7</color>
     <color name="toggle_button_off">#cac7ca</color>
+
+    <color name="scan_button_on">#ffc107</color>
 </resources>

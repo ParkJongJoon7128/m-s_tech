@@ -21,7 +21,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
@@ -151,21 +150,29 @@ class BleActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView?>(R.id.recyclerView).apply {
             layoutManager = viewManager
             adapter = recyclerViewAdapter
-        }.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+        }
 
         if (bluetoothAdapter != null) {
             if (bluetoothAdapter?.isEnabled == false) {
                 bluetooth_button.isChecked = true
                 scan_button.isVisible = false
+                disconnect_button.isVisible = false
             } else {
                 bluetooth_button.isChecked = false
                 scan_button.isVisible = true
+                disconnect_button.isVisible = true
             }
         }
 
         bluetooth_button.setOnCheckedChangeListener { _, isChecked ->
             bluetoothOnOff()
             scan_button.visibility = if (scan_button.visibility == View.VISIBLE) {
+                View.INVISIBLE
+            } else {
+                View.VISIBLE
+            }
+
+            disconnect_button.visibility = if (disconnect_button.visibility == View.VISIBLE){
                 View.INVISIBLE
             } else {
                 View.VISIBLE
@@ -237,3 +244,58 @@ class BleActivity : AppCompatActivity() {
 }
 
 private fun Handler.postDelayed(function: () -> Unit, scanPeriod: Int) {}
+
+
+
+
+//// Dialog 띄우는 코드 추가
+//val builder = AlertDialog.Builder(mContext)
+//val dialogView = layoutInflater.inflate(R.layout.dialog_wifimanager, null)
+//val ble_ssid = dialogView.findViewById<TextView>(R.id.ble_ssid)
+//val ble_pw = dialogView.findViewById<EditText>(R.id.ble_pw)
+//
+//val wifiManager =
+//    mContext?.applicationContext?.getSystemService(Context.WIFI_SERVICE) as WifiManager
+//val wifiInfo = wifiManager.connectionInfo
+//val ssid = wifiInfo.ssid.replace("\"", "")
+//
+//ble_ssid.text = ssid
+//
+//builder.setView(dialogView)
+//.setPositiveButton("연결") { dialog, _ ->
+//    // 연결 확인 버튼을 누른 경우의 동작 추가
+//
+//    val send_ssid = ble_ssid.text.toString()
+//    val send_pw = ble_pw.text.toString()
+//    val SP = ","
+//    val CR = "\r"
+//    val LF = "\n"
+//
+//    val sumData = send_ssid + SP + send_pw + CR + LF
+//    val result = sumData.toByteArray()
+//
+//    val service = bleGatt?.getService(serviceUUID)
+//    val characteristic = service?.getCharacteristic(characteristicUUID)
+//
+//    if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
+//        characteristic?.value = result
+//        bleGatt?.writeCharacteristic(characteristic)
+//    } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
+//        val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
+//        for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
+//            val packetSize =
+//                if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
+//            val packet =
+//                result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
+//            characteristic?.value = packet
+//            bleGatt?.writeCharacteristic(characteristic)
+//            Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
+//        }
+//    }
+//    dialog.dismiss()
+//}
+//.setNegativeButton("취소") { dialog, _ ->
+//    dialog.dismiss()
+//    // 취소 버튼을 누른 경우의 동작 추가
+//}
+//.show()

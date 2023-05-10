@@ -8,8 +8,7 @@
                 android:bottomRightRadius="10dp"
                 android:topLeftRadius="10dp"
                 android:topRightRadius="10dp" />
-            <solid android:color="#ee8da7" />
-
+            <solid android:color="@color/scan_button_on" />
         </shape>
     </item>
 </ripple>

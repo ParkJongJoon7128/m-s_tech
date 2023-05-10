@@ -72,7 +72,6 @@ class DeviceControlActivity(
 //            }
 //        }
     }
-
     @SuppressLint("MissingPermission")
     fun connectGatt(device: BluetoothDevice): BluetoothGatt? {
         this.device = device
@@ -95,7 +94,9 @@ class DeviceControlActivity(
             bluetoothGatt = null
 
             Log.i(TAG, "Disconnected to GATT server.")
-            Toast.makeText(context, "Disconnected ${device?.name}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Disconnected device", Toast.LENGTH_SHORT).show()
+        } else{
+            Toast.makeText(context, "기기와 연결되어있지 않습니다", Toast.LENGTH_SHORT).show()
         }
 
         return bluetoothGatt
