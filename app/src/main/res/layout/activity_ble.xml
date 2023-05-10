@@ -9,22 +9,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="15dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <ToggleButton
             android:id="@+id/bluetooth_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textOff="연결 끊기"
-            android:textOn="기기 연결" />
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/blescreen_togglebuttonbackground"
+            android:textColor="@color/white"
+            android:textOff="BLUETOOTH OFF"
+            android:textOn="BLUETOOTH ON"
+            android:textSize="15dp" />
 
         <Button
             android:id="@+id/scan_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:background="@drawable/blescreen_scanbutton"
             android:text="기기 탐색"
+            android:textColor="@color/white"
+            android:textSize="15dp"
             android:visibility="invisible" />
     </LinearLayout>
 

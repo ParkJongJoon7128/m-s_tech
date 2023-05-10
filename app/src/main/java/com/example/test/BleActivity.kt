@@ -10,6 +10,7 @@ import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
@@ -19,9 +20,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,34 +56,34 @@ class BleActivity : AppCompatActivity() {
     private val serviceUUID = UUID.fromString("55e405d2-af9f-a98f-e54a-7dfe43535355")
     private val characteristicUUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
 
-    private val mLeScanCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    object : ScanCallback() {
-        override fun onScanFailed(errorCode: Int) {
-            super.onScanFailed(errorCode)
-            Log.d("scanCallback", "BLE Scan Failed: ${errorCode}")
-        }
+    private val mLeScanCallback =
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP) object : ScanCallback() {
+            override fun onScanFailed(errorCode: Int) {
+                super.onScanFailed(errorCode)
+                Log.d("scanCallback", "BLE Scan Failed: ${errorCode}")
+            }
 
-        override fun onBatchScanResults(results: MutableList<ScanResult>?) {
-            super.onBatchScanResults(results)
-            results?.let {
-                for (result in it) {
-                    if (!deviceArr.contains(result.device) && result.device.name != null) {
-                        deviceArr.add(result.device)
+            override fun onBatchScanResults(results: MutableList<ScanResult>?) {
+                super.onBatchScanResults(results)
+                results?.let {
+                    for (result in it) {
+                        if (!deviceArr.contains(result.device) && result.device.name != null) {
+                            deviceArr.add(result.device)
+                        }
                     }
                 }
             }
-        }
 
-        override fun onScanResult(callbackType: Int, result: ScanResult?) {
-            super.onScanResult(callbackType, result)
-            result?.let {
-                if (!deviceArr.contains(it.device) && it.device.name != null) {
-                    deviceArr.add(it.device)
+            override fun onScanResult(callbackType: Int, result: ScanResult?) {
+                super.onScanResult(callbackType, result)
+                result?.let {
+                    if (!deviceArr.contains(it.device) && it.device.name != null) {
+                        deviceArr.add(it.device)
+                    }
+                    recyclerViewAdapter.notifyDataSetChanged()
                 }
-                recyclerViewAdapter.notifyDataSetChanged()
             }
         }
-    }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun scanDevice(state: Boolean) = if (state) {
@@ -100,8 +103,7 @@ class BleActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (permission in permissions) {
                 if (ActivityCompat.checkSelfPermission(
-                        context,
-                        permission
+                        context, permission
                     ) != PackageManager.PERMISSION_GRANTED
                 ) {
                     return false
@@ -114,9 +116,7 @@ class BleActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<String?>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -216,8 +216,7 @@ class BleActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val linearView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.recyclerview_item, parent, false)
-                    as LinearLayout
+                .inflate(R.layout.recyclerview_item, parent, false) as LinearLayout
             return MyViewHolder(linearView)
         }
 
