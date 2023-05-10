@@ -61,16 +61,6 @@ class DeviceControlActivity(
             }
             mHandler.obtainMessage().sendToTarget()
         }
-
-//        @SuppressLint("MissingPermission")
-//        private fun disconnectGattServer() {
-//            Log.d(TAG, "Closing Gatt connection")
-//            if (bluetoothGatt != null) {
-//                bluetoothGatt?.disconnect()
-//                bluetoothGatt?.close()
-//                bluetoothGatt = null
-//            }
-//        }
     }
     @SuppressLint("MissingPermission")
     fun connectGatt(device: BluetoothDevice): BluetoothGatt? {
@@ -102,3 +92,13 @@ class DeviceControlActivity(
         return bluetoothGatt
     }
 }
+
+//        @SuppressLint("MissingPermission")
+//        private fun disconnectGattServer() {
+//            Log.d(TAG, "Closing Gatt connection")
+//            if (bluetoothGatt != null) {
+//                bluetoothGatt?.disconnect()
+//                bluetoothGatt?.close()
+//                bluetoothGatt = null
+//            }
+//        }
