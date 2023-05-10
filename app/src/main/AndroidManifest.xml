@@ -2,97 +2,93 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Bluetooth -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Bluetooth -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <!-- Location -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" /> <!-- Location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- WiFi   -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- WiFi -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- WebView   -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- WebView -->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
     <queries>
-        <!-- 보안-->
-        <package android:name="com.ahnlab.v3mobileplus"/>
-        <package android:name="com.TouchEn.mVaccine.webs"/>
 
-        <!-- 우리카드-->
-        <package android:name="com.wooricard.wpay"/>
-        <package android:name="com.wooricard.smartapp"/>
-        <package android:name="com.wooribank.smart.npib"/>
-        <package android:name="com.mysmilepay.app"/>
+        <!-- 보안 -->
+        <package android:name="com.ahnlab.v3mobileplus" />
+        <package android:name="com.TouchEn.mVaccine.webs" />
 
-        <!-- 씨티카드-->
-        <package android:name="kr.co.citibank.citimobile"/>
-        <package android:name="com.citibank.cardapp"/>
+        <!-- 우리카드 -->
+        <package android:name="com.wooricard.wpay" />
+        <package android:name="com.wooricard.smartapp" />
+        <package android:name="com.wooribank.smart.npib" />
+        <package android:name="com.mysmilepay.app" />
 
-        <!-- 신한카드-->
-        <package android:name="com.shcard.smartpay"/>
-        <package android:name="com.shinhancard.smartshinhan"/>
+        <!-- 씨티카드 -->
+        <package android:name="kr.co.citibank.citimobile" />
+        <package android:name="com.citibank.cardapp" />
 
-        <!-- ISP-->
-        <package android:name="kvp.jjy.MispAndroid320"/>
+        <!-- 신한카드 -->
+        <package android:name="com.shcard.smartpay" />
+        <package android:name="com.shinhancard.smartshinhan" />
 
-        <!-- KB-->
-        <package android:name="com.kbcard.cxh.appcard"/>
+        <!-- ISP -->
+        <package android:name="kvp.jjy.MispAndroid320" />
 
-        <!-- 현대카드-->
-        <package android:name="com.hyundaicard.appcard"/>
-        <package android:name="com.samsung.android.spaylite"/>
-        <package android:name="com.ssg.serviceapp.android.egiftcertificate"/>
+        <!-- KB -->
+        <package android:name="com.kbcard.cxh.appcard" />
 
-        <!-- 삼성카드-->
-        <package android:name="kr.co.samsungcard.mpocket"/>
-        <package android:name="com.nhnent.payapp"/>
+        <!-- 현대카드 -->
+        <package android:name="com.hyundaicard.appcard" />
+        <package android:name="com.samsung.android.spaylite" />
+        <package android:name="com.ssg.serviceapp.android.egiftcertificate" />
 
-        <!-- 하나카드-->
-        <package android:name="com.hanaskcard.paycla"/>
-        <package android:name="kr.co.hanamembers.hmscustomer"/>
-        <package android:name="com.kakao.talk"/>
-        <package android:name="com.hanaskcard.rocomo.potal"/>
-        <package android:name="com.ahnlab.v3mobileplus"/>
-        <package android:name="com.lge.lgpay"/>
-        <package android:name="viva.republica.toss"/>
-        <package android:name="com.samsung.android.spay"/>
-        <package android:name="com.nhnent.payapp"/>
+        <!-- 삼성카드 -->
+        <package android:name="kr.co.samsungcard.mpocket" />
+        <package android:name="com.nhnent.payapp" />
 
-        <!-- 롯데카드-->
-        <package android:name="com.lcacApp"/>
-        <package android:name="com.lotte.lpay"/>
-        <package android:name="com.lottemembers.android"/>
+        <!-- 하나카드 -->
+        <package android:name="com.hanaskcard.paycla" />
+        <package android:name="kr.co.hanamembers.hmscustomer" />
+        <package android:name="com.kakao.talk" />
+        <package android:name="com.hanaskcard.rocomo.potal" />
+        <package android:name="com.ahnlab.v3mobileplus" />
+        <package android:name="com.lge.lgpay" />
+        <package android:name="viva.republica.toss" />
+        <package android:name="com.samsung.android.spay" />
+        <package android:name="com.nhnent.payapp" />
 
-        <!-- 농협카드-->
-        <package android:name="nh.smart.nhallonepay"/>
+        <!-- 롯데카드 -->
+        <package android:name="com.lcacApp" />
+        <package android:name="com.lotte.lpay" />
+        <package android:name="com.lottemembers.android" />
 
-        <package android:name="com.samsung.android.spay"/>
-        <package android:name="net.nshc.droidx3web"/>
-        <package android:name="kr.shiftworks.vguardweb"/>
-        <package android:name="com.payprotocol.walletkr"/>
-        <package android:name="kr.danal.app.damoum"/>
-        <package android:name="com.kt.ktauth"/>
-        <package android:name="uplus.membership"/>
-        <package android:name="com.bankpay.android"/>
-        <package android:name="com.kbstar.liivbank"/>
-        <package android:name="com.nh.cashcardapp"/>
-        <package android:name="kr.co.kfcc.mobilebank"/>
-        <package android:name="com.knb.psb"/>
-        <package android:name="com.kftc.bankpay.android"/>
-        <package android:name="kr.co.shiftworks.vguardweb"/>
-        <package android:name="com.kbankwith.smartbank"/>
-        <package android:name="viva.republica.toss"/>
-        <package android:name="com.lge.lgpay"/>
+        <!-- 농협카드 -->
+        <package android:name="nh.smart.nhallonepay" />
+        <package android:name="com.samsung.android.spay" />
+        <package android:name="net.nshc.droidx3web" />
+        <package android:name="kr.shiftworks.vguardweb" />
+        <package android:name="com.payprotocol.walletkr" />
+        <package android:name="kr.danal.app.damoum" />
+        <package android:name="com.kt.ktauth" />
+        <package android:name="uplus.membership" />
+        <package android:name="com.bankpay.android" />
+        <package android:name="com.kbstar.liivbank" />
+        <package android:name="com.nh.cashcardapp" />
+        <package android:name="kr.co.kfcc.mobilebank" />
+        <package android:name="com.knb.psb" />
+        <package android:name="com.kftc.bankpay.android" />
+        <package android:name="kr.co.shiftworks.vguardweb" />
+        <package android:name="com.kbankwith.smartbank" />
+        <package android:name="viva.republica.toss" />
+        <package android:name="com.lge.lgpay" />
 
-        <!-- 국민카드-->
-        <package android:name="com.kbstar.reboot"/>
-        <package android:name="com.kbstar.kbbank"/>
+        <!-- 국민카드 -->
+        <package android:name="com.kbstar.reboot" />
+        <package android:name="com.kbstar.kbbank" />
     </queries>
 
     <application
@@ -130,15 +126,20 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
         </activity>
     </application>
 

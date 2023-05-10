@@ -3,17 +3,15 @@ package com.example.test
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.net.http.SslError
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Message
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.webkit.*
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 import java.net.URISyntaxException
-import android.webkit.JavascriptInterface as JavascriptInterface
 
 class WebviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +29,15 @@ class WebviewActivity : AppCompatActivity() {
 
             // 자바스크립트의 window.open 허용
             settings.javaScriptCanOpenWindowsAutomatically = true
+
+            // 새 창 띄우기 허용
+            this.settings.setSupportMultipleWindows(true)
+
+            // html의 컨텐츠가 웹뷰보다 클 경우 스크린 크기에 맞게 조정
+            this.settings.loadWithOverviewMode = true
+
+            // 화면 사이즈 맞추기 허용여부
+            this.settings.useWideViewPort = true
 
             // 웹뷰에서 새 창이 뜨지 않도록 방지하는 구문
             this.webChromeClient = object: WebChromeClient(){
@@ -58,15 +65,6 @@ class WebviewActivity : AppCompatActivity() {
                     return true
                 }
             }
-
-            // 새 창 띄우기 허용
-            this.settings.setSupportMultipleWindows(true)
-
-            // html의 컨텐츠가 웹뷰보다 클 경우 스크린 크기에 맞게 조정
-            this.settings.loadWithOverviewMode = true
-
-            // 화면 사이즈 맞추기 허용여부
-            this.settings.useWideViewPort = true
 
             // 결제 시스템 사용 가능하게 기능 구현
             this.webViewClient = object : WebViewClient() {
