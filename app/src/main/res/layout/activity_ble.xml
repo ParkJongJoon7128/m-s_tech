@@ -15,24 +15,37 @@
 
         <ToggleButton
             android:id="@+id/bluetooth_btn"
-            android:layout_width="150dp"
+            android:layout_width="100dp"
             android:layout_height="60dp"
-            android:layout_margin="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/blescreen_togglebuttonbackground"
             android:textColor="@color/white"
             android:textOff="BLUETOOTH OFF"
             android:textOn="BLUETOOTH ON"
-            android:textSize="15dp" />
+            android:textSize="10dp" />
 
         <Button
             android:id="@+id/scan_button"
-            android:layout_width="150dp"
+            android:layout_width="100dp"
             android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/blescreen_scanbutton"
-            android:text="기기 탐색"
+            android:text="SCAN"
             android:textColor="@color/white"
-            android:textSize="15dp"
-            android:visibility="invisible" />
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/disconnect_button"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/mainscreen_button"
+            android:text="DISCONNECT"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

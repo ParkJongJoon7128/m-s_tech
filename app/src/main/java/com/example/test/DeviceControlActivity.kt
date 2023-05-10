@@ -14,8 +14,7 @@ import android.widget.Toast
 private val TAG = "gattClienCallback"
 
 class DeviceControlActivity(
-    private val context: Context?,
-    private var bluetoothGatt: BluetoothGatt?
+    private val context: Context?, private var bluetoothGatt: BluetoothGatt?
 ) {
     private var device: BluetoothDevice? = null
     private val gattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
@@ -63,15 +62,15 @@ class DeviceControlActivity(
             mHandler.obtainMessage().sendToTarget()
         }
 
-        @SuppressLint("MissingPermission")
-        private fun disconnectGattServer() {
-            Log.d(TAG, "Closing Gatt connection")
-            if (bluetoothGatt != null) {
-                bluetoothGatt?.disconnect()
-                bluetoothGatt?.close()
-                bluetoothGatt = null
-            }
-        }
+//        @SuppressLint("MissingPermission")
+//        private fun disconnectGattServer() {
+//            Log.d(TAG, "Closing Gatt connection")
+//            if (bluetoothGatt != null) {
+//                bluetoothGatt?.disconnect()
+//                bluetoothGatt?.close()
+//                bluetoothGatt = null
+//            }
+//        }
     }
 
     @SuppressLint("MissingPermission")
@@ -84,6 +83,21 @@ class DeviceControlActivity(
         } else {
             bluetoothGatt = device.connectGatt(context, false, gattCallback)
         }
+        return bluetoothGatt
+    }
+
+    @SuppressLint("MissingPermission")
+    fun disconnectGattServer(): BluetoothGatt? {
+        Log.d(TAG, "Closing Gatt connection")
+        if (bluetoothGatt != null) {
+            bluetoothGatt?.disconnect()
+            bluetoothGatt?.close()
+            bluetoothGatt = null
+
+            Log.i(TAG, "Disconnected to GATT server.")
+            Toast.makeText(context, "Disconnected ${device?.name}", Toast.LENGTH_SHORT).show()
+        }
+
         return bluetoothGatt
     }
 }

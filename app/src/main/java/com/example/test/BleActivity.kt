@@ -1,7 +1,6 @@
 package com.example.test
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
@@ -10,8 +9,6 @@ import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -20,11 +17,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -140,6 +135,7 @@ class BleActivity : AppCompatActivity() {
 
         val bluetooth_button: ToggleButton = findViewById(R.id.bluetooth_btn)
         val scan_button: Button = findViewById(R.id.scan_button)
+        val disconnect_button: Button = findViewById(R.id.disconnect_button)
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         viewManager = LinearLayoutManager(this)
@@ -187,6 +183,10 @@ class BleActivity : AppCompatActivity() {
                 requestPermissions(PERMISSIONS, REQUEST_PERMISSIONS_ALL)
             }
             scanDevice(true)
+        }
+
+        disconnect_button.setOnClickListener {
+            bleGatt = DeviceControlActivity(mContext, bleGatt).disconnectGattServer()
         }
     }
 
