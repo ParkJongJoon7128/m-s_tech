@@ -14,11 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import java.net.URISyntaxException
 
 class WebviewActivity : AppCompatActivity() {
+
+    private lateinit var webview: WebView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_webview)
 
-        val webview: WebView = findViewById(R.id.Webview)
+        webview = findViewById(R.id.Webview)
 
         webview.apply {
             // 사이트 로드
@@ -108,7 +111,6 @@ class WebviewActivity : AppCompatActivity() {
             }
         }
     }
-
 
     override fun onBackPressed() {
         val webview: WebView = findViewById(R.id.Webview)

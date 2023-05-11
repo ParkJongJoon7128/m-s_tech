@@ -9,13 +9,14 @@ import android.os.Looper
 import android.os.Message
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
 
 private val TAG = "gattClienCallback"
 
 class DeviceControlActivity(
     private val context: Context?, private var bluetoothGatt: BluetoothGatt?
-) {
+) : AppCompatActivity() {
     private var device: BluetoothDevice? = null
     private val gattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
         @SuppressLint("MissingPermission")

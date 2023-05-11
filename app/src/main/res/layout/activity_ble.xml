@@ -9,8 +9,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
+        android:paddingBottom="25dp"
         android:gravity="center"
+        android:background="@drawable/blescreen_3button_linearlayout"
         android:orientation="horizontal">
 
         <ToggleButton
@@ -55,7 +57,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="25dp"
         android:layout_gravity="center"
         android:scrollbars="vertical" />
 
