@@ -22,6 +22,4 @@
         android:hint="test"
         android:textColor="@color/black"
         android:textColorHint="#dfdfdf" />
-
-
 </LinearLayout>

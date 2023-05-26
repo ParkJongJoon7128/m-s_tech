@@ -148,7 +148,6 @@ class BleActivity : AppCompatActivity() {
                 scanDevice(false)
                 val device = deviceArr.get(position)
                 bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
-
                 if (bleGatt != null && bleGatt?.connect() == true && bleGatt?.device?.name == "MnS_Tech") {
                     // Dialog 띄우는 코드 추가
                     val builder = AlertDialog.Builder(mContext)
@@ -200,66 +199,37 @@ class BleActivity : AppCompatActivity() {
                     }.show()
 
                 }
-            }
 
-            override fun testOnClick(view: View, position: Int) {
 
-                scanDevice(false)
-                Log.d("testing", position.toString())
+                if (bleGatt != null && bleGatt?.connect() == true && bleGatt?.device?.name == "MnS_Tech") {
+                    val test_button: Button = findViewById(R.id.test_btn)
 
-                val device = deviceArr.get(position)
-                val test_button: Button = findViewById(R.id.test_btn)
+                    val custombuilder = AlertDialog.Builder(mContext)
+                    val customdialogView = layoutInflater.inflate(R.layout.dialog_testmanager, null)
 
-                if(device?.name == "MnS_Tech") {
+//                    val test_editText: EditText = customdialogView.findViewById(R.id.test_editText)
+//                    val value = test_editText.text.toString()
+
                     test_button.setOnClickListener {
-//                    val result = test_editTExt.text.toString().toByteArray()
+                        Log.d("testing", "testing")
 
-                        val builder = AlertDialog.Builder(mContext)
-                        val dialogView = layoutInflater.inflate(R.layout.dialog_testmanager, null)
+                        custombuilder.setView(customdialogView).setPositiveButton("전송") { dialog, _ ->
 
-                        builder.setView(dialogView).setPositiveButton("전송") { dialog, _ ->
-                        }.setNegativeButton("취소") { dialog, _ ->
+
+//                            val service = bleGatt?.getService(serviceUUID)
+//                            val characteristic = service?.getCharacteristic(characteristicUUID)
+//
+//                            val result = value.toByteArray()
+//
+//                            characteristic?.value = result
+//                            bleGatt?.writeCharacteristic(characteristic)
+//                            Log.d("testing_text", "testing_text: ${result}")
                             dialog.dismiss()
-                        }.show()
+                        }.setNegativeButton("취소") { dialog, _ ->
+                                dialog.dismiss()
+                            }.show()
                     }
                 }
-
-
-
-//                bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
-
-//                val test_button: Button = findViewById(R.id.test_btn)
-//                val test_editText: EditText = findViewById(R.id.test_editText)
-
-//                if (bleGatt != null && bleGatt?.connect() == true && bleGatt?.device?.name == "MnS_Tech") {
-//
-//                    val test_button: Button = findViewById(R.id.test_btn)
-//                    val test_editTExt: EditText = findViewById(R.id.test_editText)
-//
-//                    test_button.setOnClickListener {
-//                        val result = test_editTExt.text.toString().toByteArray()
-//
-//                        val builder = AlertDialog.Builder(mContext)
-//                        val dialogView = layoutInflater.inflate(R.layout.dialog_testmanager, null)
-//
-//                        builder.setView(dialogView).setPositiveButton("전송") { dialog, _ ->
-//                        }.setNegativeButton("취소") { dialog, _ ->
-//                            dialog.dismiss()
-//                        }.show()
-//                    }
-//                }
-//
-//                test_button.setOnClickListener {
-//                    val result = test_editText.text.toString().toByteArray()
-//
-//                    val builder = AlertDialog.Builder(mContext)
-//                    val dialogView = layoutInflater.inflate(R.layout.dialog_testmanager, null)
-//
-//                    builder.setView(dialogView).setPositiveButton("전송") { dialog, _ ->
-//                    }.setNegativeButton("취소") { dialog, _ ->
-//                        dialog.dismiss()
-//                    }.show()
-//                }
             }
         }
 
@@ -280,7 +250,7 @@ class BleActivity : AppCompatActivity() {
             }
         }
 
-        bluetooth_button.setOnCheckedChangeListener{ _, isChecked ->
+        bluetooth_button.setOnCheckedChangeListener { _, isChecked ->
             bluetoothOnOff()
             scan_button.visibility = if (scan_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
@@ -301,14 +271,14 @@ class BleActivity : AppCompatActivity() {
             }
         }
 
-        scan_button.setOnClickListener{ v: View? ->
+        scan_button.setOnClickListener { v: View? ->
             if (!hasPermissions(this, PERMISSIONS)) {
                 requestPermissions(PERMISSIONS, REQUEST_PERMISSIONS_ALL)
             }
             scanDevice(true)
         }
 
-        disconnect_button.setOnClickListener{
+        disconnect_button.setOnClickListener {
             bleGatt = DeviceControlActivity(mContext, bleGatt).disconnectGattServer()
         }
     }
@@ -333,7 +303,7 @@ class BleActivity : AppCompatActivity() {
 
         interface OnItemClickListener {
             fun onClick(view: View, position: Int)
-            fun testOnClick(view: View, position: Int)
+//            fun testOnClick(view: View, position: Int)
 
         }
 
@@ -348,17 +318,11 @@ class BleActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val itemName: TextView = holder.linearView.findViewById(R.id.item_name)
             val itemAddress: TextView = holder.linearView.findViewById(R.id.item_address)
-            val test_button: Button = holder.linearView.findViewById(R.id.test_btn)
-
             itemName.text = myDataset[position].name
             itemAddress.text = myDataset[position].address
             if (mListener != null) {
                 holder?.linearView?.setOnClickListener { v ->
                     mListener?.onClick(v, position)
-                }
-
-                test_button?.setOnClickListener { v ->
-                    mListener?.testOnClick(v, position)
                 }
             }
         }
