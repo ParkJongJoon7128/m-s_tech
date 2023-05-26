@@ -5,29 +5,45 @@
     android:layout_height="wrap_content"
     android:background="@drawable/recyclerview_item_background"
     android:gravity="center"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_margin="10dp"
     android:padding="10dp"
     tools:context=".BleActivity">
 
-    <TextView
-        android:id="@+id/item_name"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="item_name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
-        android:textColor="#000"
-        tools:ignore="MissingConstraints" />
+        android:layout_weight="4">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="item_name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+                android:textColor="#000"
+                tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/item_address"
-        android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/item_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="item_adress"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#000"
+                tools:ignore="MissingConstraints" />
+        </LinearLayout>
+    </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="item_adress"
-        android:layout_marginTop="5dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#000"
-        tools:ignore="MissingConstraints" />
+        android:text="test"
+        android:id="@+id/test_btn"/>
+
 
 
 </LinearLayout>

@@ -17,11 +17,15 @@ import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.inflate
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.resources.Compatibility.Api21Impl.inflate
 import androidx.core.app.ActivityCompat
+import androidx.core.content.res.ColorStateListInflaterCompat.inflate
+import androidx.core.content.res.ComplexColorCompat.inflate
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,10 +52,8 @@ class BleActivity : AppCompatActivity() {
 
     private var bleGatt: BluetoothGatt? = null
     private var mContext: Context? = null
-
     private val serviceUUID = UUID.fromString("55e405d2-af9f-a98f-e54a-7dfe43535355")
     private val characteristicUUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
-
     private val mLeScanCallback =
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP) object : ScanCallback() {
             override fun onScanFailed(errorCode: Int) {
@@ -147,7 +149,7 @@ class BleActivity : AppCompatActivity() {
                 val device = deviceArr.get(position)
                 bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
 
-                if(bleGatt != null && bleGatt?.connect() == true && bleGatt?.device?.name == "MnS_Tech"){
+                if (bleGatt != null && bleGatt?.connect() == true && bleGatt?.device?.name == "MnS_Tech") {
                     // Dialog 띄우는 코드 추가
                     val builder = AlertDialog.Builder(mContext)
                     val dialogView = layoutInflater.inflate(R.layout.dialog_wifimanager, null)
@@ -161,46 +163,103 @@ class BleActivity : AppCompatActivity() {
 
                     ble_ssid.text = ssid
 
-                    builder.setView(dialogView)
-                        .setPositiveButton("전송") { dialog, _ ->
-                            // 연결 확인 버튼을 누른 경우의 동작 추가
+                    builder.setView(dialogView).setPositiveButton("전송") { dialog, _ ->
+                        // 연결 확인 버튼을 누른 경우의 동작 추가
 
-                            val send_ssid = ble_ssid.text.toString()
-                            val send_pw = ble_pw.text.toString()
-                            val SP = ","
-                            val CR = "\r"
-                            val LF = "\n"
+                        val send_ssid = ble_ssid.text.toString()
+                        val send_pw = ble_pw.text.toString()
+                        val SP = ","
+                        val CR = "\r"
+                        val LF = "\n"
 
-                            val sumData = send_ssid + SP + send_pw + CR + LF
-                            val result = sumData.toByteArray()
+                        val sumData = send_ssid + SP + send_pw + CR + LF
+                        val result = sumData.toByteArray()
 
-                            val service = bleGatt?.getService(serviceUUID)
-                            val characteristic = service?.getCharacteristic(characteristicUUID)
+                        val service = bleGatt?.getService(serviceUUID)
+                        val characteristic = service?.getCharacteristic(characteristicUUID)
 
-                            if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
-                                characteristic?.value = result
+                        if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
+                            characteristic?.value = result
+                            bleGatt?.writeCharacteristic(characteristic)
+                        } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
+                            val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
+                            for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
+                                val packetSize =
+                                    if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
+                                val packet =
+                                    result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
+                                characteristic?.value = packet
                                 bleGatt?.writeCharacteristic(characteristic)
-                            } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
-                                val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
-                                for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
-                                    val packetSize =
-                                        if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
-                                    val packet =
-                                        result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
-                                    characteristic?.value = packet
-                                    bleGatt?.writeCharacteristic(characteristic)
-                                    Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
-                                }
+                                Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
                             }
-                            dialog.dismiss()
                         }
-                        .setNegativeButton("취소") { dialog, _ ->
-                            dialog.dismiss()
-                            // 취소 버튼을 누른 경우의 동작 추가
-                        }
-                        .show()
+                        dialog.dismiss()
+                    }.setNegativeButton("취소") { dialog, _ ->
+                        dialog.dismiss()
+                        // 취소 버튼을 누른 경우의 동작 추가
+                    }.show()
 
                 }
+            }
+
+            override fun testOnClick(view: View, position: Int) {
+
+                scanDevice(false)
+                Log.d("testing", position.toString())
+
+                val device = deviceArr.get(position)
+                val test_button: Button = findViewById(R.id.test_btn)
+
+                if(device?.name == "MnS_Tech") {
+                    test_button.setOnClickListener {
+//                    val result = test_editTExt.text.toString().toByteArray()
+
+                        val builder = AlertDialog.Builder(mContext)
+                        val dialogView = layoutInflater.inflate(R.layout.dialog_testmanager, null)
+
+                        builder.setView(dialogView).setPositiveButton("전송") { dialog, _ ->
+                        }.setNegativeButton("취소") { dialog, _ ->
+                            dialog.dismiss()
+                        }.show()
+                    }
+                }
+
+
+
+//                bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
+
+//                val test_button: Button = findViewById(R.id.test_btn)
+//                val test_editText: EditText = findViewById(R.id.test_editText)
+
+//                if (bleGatt != null && bleGatt?.connect() == true && bleGatt?.device?.name == "MnS_Tech") {
+//
+//                    val test_button: Button = findViewById(R.id.test_btn)
+//                    val test_editTExt: EditText = findViewById(R.id.test_editText)
+//
+//                    test_button.setOnClickListener {
+//                        val result = test_editTExt.text.toString().toByteArray()
+//
+//                        val builder = AlertDialog.Builder(mContext)
+//                        val dialogView = layoutInflater.inflate(R.layout.dialog_testmanager, null)
+//
+//                        builder.setView(dialogView).setPositiveButton("전송") { dialog, _ ->
+//                        }.setNegativeButton("취소") { dialog, _ ->
+//                            dialog.dismiss()
+//                        }.show()
+//                    }
+//                }
+//
+//                test_button.setOnClickListener {
+//                    val result = test_editText.text.toString().toByteArray()
+//
+//                    val builder = AlertDialog.Builder(mContext)
+//                    val dialogView = layoutInflater.inflate(R.layout.dialog_testmanager, null)
+//
+//                    builder.setView(dialogView).setPositiveButton("전송") { dialog, _ ->
+//                    }.setNegativeButton("취소") { dialog, _ ->
+//                        dialog.dismiss()
+//                    }.show()
+//                }
             }
         }
 
@@ -221,7 +280,7 @@ class BleActivity : AppCompatActivity() {
             }
         }
 
-        bluetooth_button.setOnCheckedChangeListener { _, isChecked ->
+        bluetooth_button.setOnCheckedChangeListener{ _, isChecked ->
             bluetoothOnOff()
             scan_button.visibility = if (scan_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
@@ -229,7 +288,7 @@ class BleActivity : AppCompatActivity() {
                 View.VISIBLE
             }
 
-            disconnect_button.visibility = if (disconnect_button.visibility == View.VISIBLE){
+            disconnect_button.visibility = if (disconnect_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
             } else {
                 View.VISIBLE
@@ -242,14 +301,14 @@ class BleActivity : AppCompatActivity() {
             }
         }
 
-        scan_button.setOnClickListener { v: View? ->
+        scan_button.setOnClickListener{ v: View? ->
             if (!hasPermissions(this, PERMISSIONS)) {
                 requestPermissions(PERMISSIONS, REQUEST_PERMISSIONS_ALL)
             }
             scanDevice(true)
         }
 
-        disconnect_button.setOnClickListener {
+        disconnect_button.setOnClickListener{
             bleGatt = DeviceControlActivity(mContext, bleGatt).disconnectGattServer()
         }
     }
@@ -274,6 +333,8 @@ class BleActivity : AppCompatActivity() {
 
         interface OnItemClickListener {
             fun onClick(view: View, position: Int)
+            fun testOnClick(view: View, position: Int)
+
         }
 
         class MyViewHolder(val linearView: LinearLayout) : RecyclerView.ViewHolder(linearView)
@@ -287,11 +348,17 @@ class BleActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val itemName: TextView = holder.linearView.findViewById(R.id.item_name)
             val itemAddress: TextView = holder.linearView.findViewById(R.id.item_address)
+            val test_button: Button = holder.linearView.findViewById(R.id.test_btn)
+
             itemName.text = myDataset[position].name
             itemAddress.text = myDataset[position].address
             if (mListener != null) {
                 holder?.linearView?.setOnClickListener { v ->
                     mListener?.onClick(v, position)
+                }
+
+                test_button?.setOnClickListener { v ->
+                    mListener?.testOnClick(v, position)
                 }
             }
         }
