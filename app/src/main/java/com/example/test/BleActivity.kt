@@ -197,38 +197,6 @@ class BleActivity : AppCompatActivity() {
                         dialog.dismiss()
                         // 취소 버튼을 누른 경우의 동작 추가
                     }.show()
-
-                }
-
-
-                if (bleGatt != null && bleGatt?.connect() == true && bleGatt?.device?.name == "MnS_Tech") {
-                    val test_button: Button = findViewById(R.id.test_btn)
-
-                    val custombuilder = AlertDialog.Builder(mContext)
-                    val customdialogView = layoutInflater.inflate(R.layout.dialog_testmanager, null)
-
-//                    val test_editText: EditText = customdialogView.findViewById(R.id.test_editText)
-//                    val value = test_editText.text.toString()
-
-                    test_button.setOnClickListener {
-                        Log.d("testing", "testing")
-
-                        custombuilder.setView(customdialogView).setPositiveButton("전송") { dialog, _ ->
-
-
-//                            val service = bleGatt?.getService(serviceUUID)
-//                            val characteristic = service?.getCharacteristic(characteristicUUID)
-//
-//                            val result = value.toByteArray()
-//
-//                            characteristic?.value = result
-//                            bleGatt?.writeCharacteristic(characteristic)
-//                            Log.d("testing_text", "testing_text: ${result}")
-                            dialog.dismiss()
-                        }.setNegativeButton("취소") { dialog, _ ->
-                                dialog.dismiss()
-                            }.show()
-                    }
                 }
             }
         }
@@ -303,8 +271,6 @@ class BleActivity : AppCompatActivity() {
 
         interface OnItemClickListener {
             fun onClick(view: View, position: Int)
-//            fun testOnClick(view: View, position: Int)
-
         }
 
         class MyViewHolder(val linearView: LinearLayout) : RecyclerView.ViewHolder(linearView)
