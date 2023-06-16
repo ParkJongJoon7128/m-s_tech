@@ -24,8 +24,6 @@ class MainActivity : AppCompatActivity() {
 
         val Ble_btn: Button = findViewById(R.id.Ble_btn)
         val Webview_btn: Button = findViewById(R.id.Webview_btn)
-        val test_btn: Button = findViewById(R.id.test_btn)
-
         Ble_btn.setOnClickListener {
             val intent = Intent(this, BleActivity::class.java)
             startActivity(intent)
@@ -36,26 +34,27 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        test_btn.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            val dialogView = layoutInflater.inflate(R.layout.dialog_testmanager, null)
-            val test_editText: EditText = dialogView.findViewById(R.id.test_editText)
-
-            builder.setView(dialogView).setPositiveButton("전송") { dialog, _ ->
-                val test_text = test_editText.text.toString()
-
-                val result = test_text.toByteArray()
-                val service = bleGatt?.getService(serviceUUID)
-                val characteristic = service?.getCharacteristic(characteristicUUID)
-
-                characteristic?.value = result
-                bleGatt?.writeCharacteristic(characteristic)
-
-                dialog.dismiss()
-
-            }.setNegativeButton("취소") { dialog, _ ->
-                dialog.dismiss()
-            }.show()
-        }
+//        val test_btn: Button = findViewById(R.id.test_btn)
+//        test_btn.setOnClickListener {
+//            val builder = AlertDialog.Builder(this)
+//            val dialogView = layoutInflater.inflate(R.layout.dialog_testmanager, null)
+//            val test_editText: EditText = dialogView.findViewById(R.id.test_editText)
+//
+//            builder.setView(dialogView).setPositiveButton("전송") { dialog, _ ->
+//                val test_text = test_editText.text.toString()
+//
+//                val result = test_text.toByteArray()
+//                val service = bleGatt?.getService(serviceUUID)
+//                val characteristic = service?.getCharacteristic(characteristicUUID)
+//
+//                characteristic?.value = result
+//                bleGatt?.writeCharacteristic(characteristic)
+//
+//                dialog.dismiss()
+//
+//            }.setNegativeButton("취소") { dialog, _ ->
+//                dialog.dismiss()
+//            }.show()
+//        }
     }
 }
