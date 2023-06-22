@@ -19,44 +19,59 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="50dp"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="15dp">
 
         <Button
             android:id="@+id/Ble_btn"
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_marginRight="15dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
             android:background="@drawable/mainscreen_button"
             android:padding="15dp"
             android:text="단말기 통신"
             android:textColor="#000"
-            android:textSize="24dp" />
+            android:textSize="14dp" />
 
         <Button
             android:id="@+id/Webview_btn"
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_marginLeft="15dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+
             android:background="@drawable/mainscreen_button"
             android:padding="15dp"
             android:text="플랫폼 사용"
             android:textColor="#000"
-            android:textSize="24dp" />
+            android:textSize="14dp" />
+
+        <Button
+            android:id="@+id/test_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/mainscreen_button"
+            android:padding="15dp"
+            android:text="test"
+            android:textColor="#000"
+            android:textSize="14dp" />
     </LinearLayout>
 
-<!--    <Button-->
-<!--        android:id="@+id/test_btn"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center_horizontal"-->
-<!--        android:layout_marginLeft="30dp"-->
-<!--        android:layout_marginRight="30dp"-->
-<!--        android:background="@drawable/scanbutton_on"-->
-<!--        android:text="test"-->
-<!--        android:textSize="30dp" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/test_btn"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center_horizontal"-->
+    <!--        android:layout_marginLeft="30dp"-->
+    <!--        android:layout_marginRight="30dp"-->
+    <!--        android:background="@drawable/scanbutton_on"-->
+    <!--        android:text="test"-->
+    <!--        android:textSize="30dp" />-->
 
 </LinearLayout>

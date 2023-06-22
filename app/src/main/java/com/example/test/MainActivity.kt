@@ -1,13 +1,10 @@
 package com.example.test
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.bluetooth.BluetoothGatt
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
@@ -24,6 +21,8 @@ class MainActivity : AppCompatActivity() {
 
         val Ble_btn: Button = findViewById(R.id.Ble_btn)
         val Webview_btn: Button = findViewById(R.id.Webview_btn)
+        val test_btn: Button = findViewById(R.id.test_btn)
+
         Ble_btn.setOnClickListener {
             val intent = Intent(this, BleActivity::class.java)
             startActivity(intent)
@@ -31,6 +30,11 @@ class MainActivity : AppCompatActivity() {
 
         Webview_btn.setOnClickListener {
             val intent = Intent(this, WebviewActivity::class.java)
+            startActivity(intent)
+        }
+
+        test_btn.setOnClickListener {
+            val intent = Intent(this, TestActivity::class.java)
             startActivity(intent)
         }
 

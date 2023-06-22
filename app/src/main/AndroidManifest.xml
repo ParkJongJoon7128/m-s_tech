@@ -14,7 +14,6 @@
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
-
     <queries>
 
         <!-- 보안 -->
@@ -110,6 +109,13 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".TestActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".BleActivity"
             android:exported="true">
             <meta-data
@@ -118,8 +124,8 @@
         </activity>
         <activity
             android:name=".WebviewActivity"
-            android:exported="true"
-            android:configChanges="orientation|keyboardHidden|screenSize">
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -131,7 +137,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".SplashActivity"
             android:exported="true"
