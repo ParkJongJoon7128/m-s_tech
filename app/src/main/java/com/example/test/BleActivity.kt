@@ -61,7 +61,7 @@ class BleActivity : AppCompatActivity() {
                 super.onBatchScanResults(results)
                 results?.let {
                     for (result in it) {
-                        if (!deviceArr.contains(result.device) && result.device.name != null) {
+                        if (!deviceArr.contains(result.device) && result.device.name != null && result.device.name == "MnS_Tech") {
                             deviceArr.add(result.device)
                         }
                     }
@@ -71,7 +71,7 @@ class BleActivity : AppCompatActivity() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
                 result?.let {
-                    if (!deviceArr.contains(it.device) && it.device.name != null) {
+                    if (!deviceArr.contains(it.device) && it.device.name != null && it.device.name == "MnS_Tech") {
                         deviceArr.add(it.device)
                     }
                     recyclerViewAdapter.notifyDataSetChanged()
@@ -144,7 +144,7 @@ class BleActivity : AppCompatActivity() {
                 scanDevice(false)
                 val device = deviceArr.get(position)
                 bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
-                if (bleGatt != null && bleGatt?.connect() == true && bleGatt?.device?.name == "MnS_Tech") {
+                if (bleGatt != null && bleGatt?.connect() == true) {
                     // Dialog 띄우는 코드 추가
                     val builder = AlertDialog.Builder(mContext)
                     val dialogView = layoutInflater.inflate(R.layout.dialog_wifimanager, null)
