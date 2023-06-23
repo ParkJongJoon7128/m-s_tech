@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/blescreen_3button_linearlayout"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="25dp">
+
+        <ToggleButton
+            android:id="@+id/bluetooth_btn"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/blescreen_togglebuttonbackground"
+            android:textColor="@color/white"
+            android:textOff="BLUETOOTH OFF"
+            android:textOn="BLUETOOTH ON"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/scan_button"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/blescreen_scanbuttonbackground"
+            android:text="SCAN"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/disconnect_button"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/blescreen_disconnectbutton"
+            android:text="DISCONNECT"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/test_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="데이터 전송" />
+
+        <EditText
+            android:id="@+id/test_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="단말기로 보낼 데이터 입력" />
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:scrollbars="vertical" />
+
+</LinearLayout>

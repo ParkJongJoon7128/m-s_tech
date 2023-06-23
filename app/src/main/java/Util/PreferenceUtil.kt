@@ -2,8 +2,6 @@ package Util
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Parcel
-import android.os.Parcelable
 
 class PreferenceUtil(context: Context) {
 

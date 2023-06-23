@@ -1,37 +1,68 @@
 package com.example.test
 
+import MainMenuWebViewFragment
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothGatt
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var bleGatt: BluetoothGatt? = null
-    private val serviceUUID = UUID.fromString("55e405d2-af9f-a98f-e54a-7dfe43535355")
-    private val characteristicUUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
+//    private var bleGatt: BluetoothGatt? = null
+//    private val serviceUUID = UUID.fromString("55e405d2-af9f-a98f-e54a-7dfe43535355")
+//    private val characteristicUUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
+
+    private val fragmentManager: FragmentManager = supportFragmentManager
+    private val fragmentChart: MainMenuChartFragment = MainMenuChartFragment()
+    private val fragmentBLE: MainMenuBLEFragment = MainMenuBLEFragment()
+    private val fragmentWebView: MainMenuWebViewFragment = MainMenuWebViewFragment()
+
 
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val Ble_btn: Button = findViewById(R.id.Ble_btn)
-        val Webview_btn: Button = findViewById(R.id.Webview_btn)
-//        val test_btn: Button = findViewById(R.id.test_btn)
+        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.menu_frame_layout, fragmentChart).commitAllowingStateLoss()
 
-        Ble_btn.setOnClickListener {
-            val intent = Intent(this, BleActivity::class.java)
-            startActivity(intent)
-        }
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.menu_bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener(ItemSelectedListener())
 
-        Webview_btn.setOnClickListener {
-            val intent = Intent(this, WebviewActivity::class.java)
-            startActivity(intent)
+    }
+
+    private inner class ItemSelectedListener : BottomNavigationView.OnNavigationItemSelectedListener {
+        override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+            val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+
+            when (menuItem.itemId) {
+                R.id.menu_chart -> transaction.replace(R.id.menu_frame_layout, fragmentChart).commitAllowingStateLoss()
+                R.id.menu_ble -> transaction.replace(R.id.menu_frame_layout, fragmentBLE).commitAllowingStateLoss()
+                R.id.menu_webview -> transaction.replace(R.id.menu_frame_layout, fragmentWebView).commitAllowingStateLoss()
+            }
+
+            return true
         }
+    }
+}
+
+//        val Ble_btn: Button = findViewById(R.id.Ble_btn)
+//        val Webview_btn: Button = findViewById(R.id.Webview_btn)
+////        val test_btn: Button = findViewById(R.id.test_btn)
+//
+//        Ble_btn.setOnClickListener {
+//            val intent = Intent(this, BleActivity::class.java)
+//            startActivity(intent)
+//        }
+//
+//        Webview_btn.setOnClickListener {
+//            val intent = Intent(this, WebviewActivity::class.java)
+//            startActivity(intent)
+//        }
 
 //        test_btn.setOnClickListener {
 //            val intent = Intent(this, TestActivity::class.java)
@@ -60,5 +91,3 @@ class MainActivity : AppCompatActivity() {
 //                dialog.dismiss()
 //            }.show()
 //        }
-    }
-}
