@@ -3,6 +3,7 @@ package com.example.test
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothClass.Device
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.le.ScanCallback
@@ -22,13 +23,17 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.io.IOException
 import java.util.*
 
 @SuppressLint("MissingPermission")
 class BleActivity : AppCompatActivity() {
+
+    private var test_position = 0
 
     private val REQUEST_ENABLE_BT = 1
     private var bluetoothAdapter: BluetoothAdapter? = null
@@ -61,7 +66,8 @@ class BleActivity : AppCompatActivity() {
                 super.onBatchScanResults(results)
                 results?.let {
                     for (result in it) {
-                        if (!deviceArr.contains(result.device) && result.device.name != null && result.device.name == "MnS_Tech") {
+//                        if (!deviceArr.contains(result.device) && result.device.name != null && result.device.name == "MnS_Tech") {
+                        if (!deviceArr.contains(result.device) && result.device.name != null) {
                             deviceArr.add(result.device)
                         }
                     }
@@ -71,7 +77,8 @@ class BleActivity : AppCompatActivity() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
                 result?.let {
-                    if (!deviceArr.contains(it.device) && it.device.name != null && it.device.name == "MnS_Tech") {
+//                    if (!deviceArr.contains(it.device) && it.device.name != null && it.device.name == "MnS_Tech") {
+                    if (!deviceArr.contains(it.device) && it.device.name != null) {
                         deviceArr.add(it.device)
                     }
                     recyclerViewAdapter.notifyDataSetChanged()
@@ -136,6 +143,9 @@ class BleActivity : AppCompatActivity() {
         val scan_button: Button = findViewById(R.id.scan_button)
         val disconnect_button: Button = findViewById(R.id.disconnect_button)
 
+        val test_button: Button = findViewById(R.id.test_button)
+        val test_editText: EditText = findViewById(R.id.test_editText)
+
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         viewManager = LinearLayoutManager(this)
         recyclerViewAdapter = RecyclerViewAdapter(deviceArr)
@@ -194,6 +204,41 @@ class BleActivity : AppCompatActivity() {
                         // 취소 버튼을 누른 경우의 동작 추가
                     }.show()
                 }
+            }
+        }
+
+        test_button.setOnClickListener {
+//            val device = deviceArr.get(test_position)
+//            bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
+
+            try {
+                if (bleGatt != null && bleGatt?.connect() == true) {
+                    val test_text = test_editText.text.toString()
+                    val result = test_text.toByteArray()
+
+                    val service = bleGatt?.getService(serviceUUID)
+                    val characteristic = service?.getCharacteristic(characteristicUUID)
+
+                    if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
+                        characteristic?.value = result
+                        bleGatt?.writeCharacteristic(characteristic)
+                    } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
+                        val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
+                        for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
+                            val packetSize =
+                                if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
+                            val packet =
+                                result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
+                            characteristic?.value = packet
+                            bleGatt?.writeCharacteristic(characteristic)
+                            Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
+                        }
+                    }
+                }
+
+                Toast.makeText(applicationContext, test_editText.text.toString(), Toast.LENGTH_SHORT).show()
+            }catch (e: IOException){
+                Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
             }
         }
 

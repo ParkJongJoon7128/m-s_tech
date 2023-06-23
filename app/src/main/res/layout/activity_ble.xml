@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:paddingBottom="25dp"
-        android:gravity="center"
         android:background="@drawable/blescreen_3button_linearlayout"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="25dp">
 
         <ToggleButton
             android:id="@+id/bluetooth_btn"
@@ -53,13 +53,31 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/test_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="데이터 전송" />
+
+        <EditText
+            android:id="@+id/test_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="단말기로 보낼 데이터 입력" />
+    </LinearLayout>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
         android:layout_gravity="center"
+        android:layout_marginTop="25dp"
         android:scrollbars="vertical" />
-
-
 </LinearLayout>

@@ -50,28 +50,16 @@
             android:textColor="#000"
             android:textSize="14dp" />
 
-        <Button
-            android:id="@+id/test_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:layout_weight="1"
-            android:background="@drawable/mainscreen_button"
-            android:padding="15dp"
-            android:text="test"
-            android:textColor="#000"
-            android:textSize="14dp" />
+        <!--        <Button-->
+        <!--            android:id="@+id/test_btn"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_margin="15dp"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:background="@drawable/mainscreen_button"-->
+        <!--            android:padding="15dp"-->
+        <!--            android:text="test"-->
+        <!--            android:textColor="#000"-->
+        <!--            android:textSize="14dp" />-->
     </LinearLayout>
-
-    <!--    <Button-->
-    <!--        android:id="@+id/test_btn"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_gravity="center_horizontal"-->
-    <!--        android:layout_marginLeft="30dp"-->
-    <!--        android:layout_marginRight="30dp"-->
-    <!--        android:background="@drawable/scanbutton_on"-->
-    <!--        android:text="test"-->
-    <!--        android:textSize="30dp" />-->
-
 </LinearLayout>
