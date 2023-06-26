@@ -151,6 +151,59 @@ class MainMenuBLEFragment : Fragment() {
                 }
             }
 
+//        test_button.setOnClickListener {
+////            val device = deviceArr.get(test_position)
+////            bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
+//
+//            try {
+//                if (bleGatt != null && bleGatt?.connect() == true) {
+//                    val test_text = test_editText.text.toString()
+//                    val result = test_text.toByteArray()
+//
+//                    val service = bleGatt?.getService(serviceUUID)
+//                    val characteristic = service?.getCharacteristic(characteristicUUID)
+//
+//                    if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
+//                        characteristic?.value = result
+//                        bleGatt?.writeCharacteristic(characteristic)
+//                    } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
+//                        val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
+//                        for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
+//                            val packetSize =
+//                                if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
+//                            val packet =
+//                                result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
+//                            characteristic?.value = packet
+//                            bleGatt?.writeCharacteristic(characteristic)
+//                            Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
+//                        }
+//                    }
+//                }
+//
+//                Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT).show()
+//            }catch (e: IOException){
+//                Toast.makeText(mainActivity, e.message, Toast.LENGTH_SHORT).show()
+//            }
+//        }
+
+        if (bluetoothAdapter == null || !bluetoothAdapter?.isEnabled!!) {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+        }
+
+        if (!hasPermissions(requireContext(), PERMISSIONS)) {
+            requestPermissions(PERMISSIONS, REQUEST_PERMISSIONS_ALL)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_main_menu_b_l_e, container, false)
+        test_button = view.findViewById(R.id.test_button)
+        test_editText = view.findViewById(R.id.test_editText)
+
         test_button.setOnClickListener {
 //            val device = deviceArr.get(test_position)
 //            bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
@@ -185,23 +238,6 @@ class MainMenuBLEFragment : Fragment() {
                 Toast.makeText(mainActivity, e.message, Toast.LENGTH_SHORT).show()
             }
         }
-
-        if (bluetoothAdapter == null || !bluetoothAdapter?.isEnabled!!) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-        }
-
-        if (!hasPermissions(requireContext(), PERMISSIONS)) {
-            requestPermissions(PERMISSIONS, REQUEST_PERMISSIONS_ALL)
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_main_menu_b_l_e, container, false)
-        test_button = view.findViewById(R.id.test_button)
-        test_editText = view.findViewById(R.id.test_editText)
         return view
     }
 
