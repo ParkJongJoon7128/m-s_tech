@@ -1,5 +1,6 @@
 package com.example.test
 
+import MainMenuChartFragment
 import MainMenuWebViewFragment
 import android.annotation.SuppressLint
 import android.os.Bundle

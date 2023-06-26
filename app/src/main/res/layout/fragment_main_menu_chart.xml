@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainMenuChartFragment">
 
-    <TextView
+    <com.github.mikephil.charting.charts.BarChart
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Chart"
-        android:textColor="@android:color/black"
-        android:textSize="50sp"/>
+        android:layout_gravity="center"
+        android:id="@+id/filter_chart"/>
 
 </FrameLayout>
