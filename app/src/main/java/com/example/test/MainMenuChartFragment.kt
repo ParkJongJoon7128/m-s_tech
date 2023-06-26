@@ -13,6 +13,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
 class MainMenuChartFragment : Fragment() {
 
@@ -60,13 +61,16 @@ class MainMenuChartFragment : Fragment() {
         // 격자선 설정 (default = true)
         xAxis.setDrawGridLines(false)
         xAxis.textSize = 20f
+        // X축의 레이블을 변경하는 부분입니다.
+        val labels = listOf("", "필터1", "필터2", "필터3", "필터4")
+        xAxis.valueFormatter = IndexAxisValueFormatter(labels)
 
         val leftAxis: YAxis = barChart.axisLeft
         // 좌측 선 설정 (default = true)
         leftAxis.setDrawAxisLine(false)
         // 좌측 텍스트 컬러 설정
         leftAxis.textColor = Color.BLACK
-//        leftAxis.setDrawLabels(false)
+        leftAxis.textSize = 20f
 
         val rightAxis: YAxis = barChart.axisRight
         // 우측 선 설정 (default = true)
@@ -99,7 +103,7 @@ class MainMenuChartFragment : Fragment() {
             BarEntry(3f, 6f),
             BarEntry(4f, 8f),
         )
-        val title = "필터 상태"
+        val title = "필터"
         val dataSet = BarDataSet(entries, title)
 
         val colors = listOf(Color.YELLOW, Color.GREEN, Color.CYAN, Color.MAGENTA)

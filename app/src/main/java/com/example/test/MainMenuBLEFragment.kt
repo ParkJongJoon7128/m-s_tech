@@ -24,6 +24,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.os.postDelayed
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,10 +34,15 @@ import kotlin.collections.ArrayList
 
 class MainMenuBLEFragment : Fragment() {
 
-    private lateinit var  mainActivity: MainActivity
+    private lateinit var mainActivity: MainActivity
 
     private lateinit var test_button: Button
     private lateinit var test_editText: EditText
+
+    private lateinit var bluetooth_button: ToggleButton
+    private lateinit var scan_button: Button
+    private lateinit var disconnect_button: Button
+    private lateinit var recyclerView: RecyclerView
 
     private var test_position = 0
 
@@ -94,14 +100,57 @@ class MainMenuBLEFragment : Fragment() {
         }
 
     @SuppressLint("MissingPermission")
+    private fun scanDevice(state: Boolean) = if (state) {
+        handler.postDelayed({
+            scanning = false
+            bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
+        }, SCAN_PERIOD)
+        scanning = true
+        deviceArr.clear()
+        bluetoothAdapter?.bluetoothLeScanner?.startScan(mLeScanCallback)
+    } else {
+        scanning = false
+        bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
+    }
+
+    private fun hasPermissions(context: Context?, permissions: Array<String>): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (permission in permissions) {
+                if (ActivityCompat.checkSelfPermission(
+                        context, permission
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_PERMISSIONS_ALL -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(mainActivity, "Permissions granted!", Toast.LENGTH_SHORT).show()
+                } else {
+                    requestPermissions(permissions, REQUEST_PERMISSIONS_ALL)
+                    Toast.makeText(mainActivity, "Permissions must be granted", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mContext = requireContext()
+        mContext = mainActivity
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        viewManager = LinearLayoutManager(requireContext())
+        viewManager = LinearLayoutManager(mContext)
         recyclerViewAdapter = BleActivity.RecyclerViewAdapter(deviceArr)
+
         recyclerViewAdapter.mListener =
             object : BleActivity.RecyclerViewAdapter.OnItemClickListener {
                 @SuppressLint("MissingPermission")
@@ -124,28 +173,28 @@ class MainMenuBLEFragment : Fragment() {
                         ble_ssid.text = ssid
 
                         builder.setView(dialogView).setPositiveButton("전송") { dialog, _ ->
-                                // 연결 확인 버튼을 누른 경우의 동작 추가
+                            // 연결 확인 버튼을 누른 경우의 동작 추가
 
-                                val send_ssid = ble_ssid.text.toString()
-                                val send_pw = ble_pw.text.toString()
-                                val SP = ","
-                                val CR = "\r"
-                                val LF = "\n"
+                            val send_ssid = ble_ssid.text.toString()
+                            val send_pw = ble_pw.text.toString()
+                            val SP = ","
+                            val CR = "\r"
+                            val LF = "\n"
 
-                                val sumData = send_ssid + SP + send_pw + CR + LF
-                                val result = sumData.toByteArray()
+                            val sumData = send_ssid + SP + send_pw + CR + LF
+                            val result = sumData.toByteArray()
 
-                                val service = bleGatt?.getService(serviceUUID)
-                                val characteristic = service?.getCharacteristic(characteristicUUID)
-                                characteristic?.writeType =
-                                    BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-                                characteristic?.value = result
-                                bleGatt?.writeCharacteristic(characteristic)
-                                dialog.dismiss()
-                            }.setNegativeButton("취소") { dialog, _ ->
-                                // 취소 버튼을 누른 경우의 동작 추가
-                                dialog.dismiss()
-                            }
+                            val service = bleGatt?.getService(serviceUUID)
+                            val characteristic = service?.getCharacteristic(characteristicUUID)
+                            characteristic?.writeType =
+                                BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                            characteristic?.value = result
+                            bleGatt?.writeCharacteristic(characteristic)
+                            dialog.dismiss()
+                        }.setNegativeButton("취소") { dialog, _ ->
+                            // 취소 버튼을 누른 경우의 동작 추가
+                            dialog.dismiss()
+                        }
                         builder.show()
                     }
                 }
@@ -224,8 +273,7 @@ class MainMenuBLEFragment : Fragment() {
                         for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
                             val packetSize =
                                 if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
-                            val packet =
-                                result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
+                            val packet = result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
                             characteristic?.value = packet
                             bleGatt?.writeCharacteristic(characteristic)
                             Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
@@ -233,8 +281,9 @@ class MainMenuBLEFragment : Fragment() {
                     }
                 }
 
-                Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT).show()
-            }catch (e: IOException){
+                Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT)
+                    .show()
+            } catch (e: IOException) {
                 Toast.makeText(mainActivity, e.message, Toast.LENGTH_SHORT).show()
             }
         }
@@ -244,51 +293,55 @@ class MainMenuBLEFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView = view.findViewById(R.id.recyclerView)
+        bluetooth_button = view.findViewById(R.id.bluetooth_btn)
+        scan_button = view.findViewById(R.id.scan_button)
+        disconnect_button = view.findViewById(R.id.disconnect_button)
+
+
         recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = recyclerViewAdapter
         }
 
-        val scanButton = view.findViewById<Button>(R.id.scan_button)
-        scanButton.setOnClickListener {
-            if (!scanning) {
-                scanDevice(true)
+        if (bluetoothAdapter != null) {
+            if (bluetoothAdapter?.isEnabled == false) {
+                bluetooth_button.isChecked = true
+                scan_button.isVisible = false
+                disconnect_button.isVisible = false
             } else {
+                bluetooth_button.isChecked = false
+                scan_button.isVisible = true
+                disconnect_button.isVisible = true
+            }
+        }
+
+        bluetooth_button.setOnCheckedChangeListener { _, isChecked ->
+            bluetoothOnOff()
+            scan_button.visibility = if (scan_button.visibility == View.VISIBLE) {
+                View.INVISIBLE
+            } else {
+                View.VISIBLE
+            }
+
+            if (scan_button.visibility == View.INVISIBLE) {
                 scanDevice(false)
+                deviceArr.clear()
+                recyclerViewAdapter.notifyDataSetChanged()
             }
         }
-    }
 
-    @SuppressLint("MissingPermission")
-    private fun scanDevice(state: Boolean) {
-        if (state) {
-            handler.postDelayed({
-                scanning = false
-                bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
-            }, SCAN_PERIOD)
-            scanning = true
-            deviceArr.clear()
-            bluetoothAdapter?.bluetoothLeScanner?.startScan(mLeScanCallback)
-        } else {
-            scanning = false
-            bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
-        }
-    }
-
-    private fun hasPermissions(context: Context?, permissions: Array<String>): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (permission in permissions) {
-                if (ActivityCompat.checkSelfPermission(
-                        context, permission
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    return false
-                }
+        scan_button.setOnClickListener { v: View? ->
+            if (!hasPermissions(mainActivity, PERMISSIONS)) {
+                requestPermissions(PERMISSIONS, REQUEST_PERMISSIONS_ALL)
             }
+            scanDevice(true)
         }
-        return true
+
+        disconnect_button.setOnClickListener {
+            bleGatt = DeviceControlActivity(mContext, bleGatt).disconnectGattServer()
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -336,25 +389,6 @@ class MainMenuBLEFragment : Fragment() {
         }
 
         override fun getItemCount(): Int = myDataset.size
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>, grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            REQUEST_PERMISSIONS_ALL -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(requireContext(), "Permissions granted!", Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    requestPermissions(permissions, REQUEST_PERMISSIONS_ALL)
-                    Toast.makeText(
-                        requireContext(), "Permissions must be granted", Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
     }
 
     override fun onAttach(context: Context) {
