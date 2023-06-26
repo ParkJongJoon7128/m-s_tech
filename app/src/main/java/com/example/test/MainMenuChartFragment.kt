@@ -1,4 +1,3 @@
-// MainMenuChartFragment.kt
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,7 +30,7 @@ class MainMenuChartFragment : Fragment() {
         return view
     }
 
-    private fun initBarChart(barChart: BarChart){
+    private fun initBarChart(barChart: BarChart) {
         // 차트 회색 배경 설정 (default = false)
         barChart.setDrawGridBackground(false)
         // 막대 그림자 설정 (default = false)
@@ -60,25 +59,28 @@ class MainMenuChartFragment : Fragment() {
         xAxis.setDrawAxisLine(false)
         // 격자선 설정 (default = true)
         xAxis.setDrawGridLines(false)
+        xAxis.textSize = 20f
 
         val leftAxis: YAxis = barChart.axisLeft
         // 좌측 선 설정 (default = true)
         leftAxis.setDrawAxisLine(false)
         // 좌측 텍스트 컬러 설정
         leftAxis.textColor = Color.BLACK
+//        leftAxis.setDrawLabels(false)
 
         val rightAxis: YAxis = barChart.axisRight
         // 우측 선 설정 (default = true)
         rightAxis.setDrawAxisLine(false)
         // 우측 텍스트 컬러 설정
         rightAxis.textColor = Color.BLACK
+        rightAxis.setDrawLabels(false)
 
         // 바차트의 타이틀
         val legend: Legend = barChart.legend
         // 범례 모양 설정 (default = 정사각형)
         legend.form = Legend.LegendForm.SQUARE
         // 타이틀 텍스트 사이즈 설정
-        legend.textSize = 10f
+        legend.textSize = 20f
         // 타이틀 텍스트 컬러 설정
         legend.textColor = Color.BLACK
         // 범례 위치 설정
@@ -87,7 +89,7 @@ class MainMenuChartFragment : Fragment() {
         // 범례 방향 설정
         legend.orientation = Legend.LegendOrientation.HORIZONTAL
         // 차트 내부 범례 위치하게 함 (default = false)
-        legend.setDrawInside(true)
+        legend.setDrawInside(false)
     }
 
     private fun setupChart() {
@@ -98,15 +100,11 @@ class MainMenuChartFragment : Fragment() {
             BarEntry(4f, 8f),
         )
         val title = "필터 상태"
-
-
         val dataSet = BarDataSet(entries, title)
-        dataSet.setColor(
-            Color.rgb(151,218,59),
-            Color.rgb(0,195,244),
-//            Color.rgb(192,243,42),
-//            Color.rgb(202,104,217)
-        )
+
+        val colors = listOf(Color.YELLOW, Color.GREEN, Color.CYAN, Color.MAGENTA)
+        dataSet.colors = colors
+        dataSet.valueTextSize = 20f
 
         val data = BarData(dataSet)
 
