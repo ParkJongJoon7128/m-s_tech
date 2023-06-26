@@ -50,9 +50,7 @@ class MainMenuBLEFragment : Fragment() {
     private var bluetoothAdapter: BluetoothAdapter? = null
 
     private val REQUEST_PERMISSIONS_ALL = 2
-    private val PERMISSIONS = arrayOf(
-        android.Manifest.permission.ACCESS_FINE_LOCATION
-    )
+    private val PERMISSIONS = arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION)
 
     private var scanning: Boolean = false
     private var deviceArr = ArrayList<BluetoothDevice>()
@@ -78,7 +76,7 @@ class MainMenuBLEFragment : Fragment() {
                 super.onBatchScanResults(results)
                 results?.let {
                     for (result in it) {
-                        //                        if (!deviceArr.contains(result.device) && result.device.name != null && result.device.name == "MnS_Tech") {
+                        // if (!deviceArr.contains(result.device) && result.device.name != null && result.device.name == "MnS_Tech") {
                         if (!deviceArr.contains(result.device) && result.device.name != null) {
                             deviceArr.add(result.device)
                         }
@@ -90,7 +88,7 @@ class MainMenuBLEFragment : Fragment() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
                 result?.let {
-                    //                    if (!deviceArr.contains(it.device) && it.device.name != null && it.device.name == "MnS_Tech") {
+                    // if (!deviceArr.contains(it.device) && it.device.name != null && it.device.name == "MnS_Tech") {
                     if (!deviceArr.contains(it.device) && it.device.name != null) {
                         deviceArr.add(it.device)
                     }
@@ -100,6 +98,7 @@ class MainMenuBLEFragment : Fragment() {
         }
 
     @SuppressLint("MissingPermission")
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun scanDevice(state: Boolean) = if (state) {
         handler.postDelayed({
             scanning = false
@@ -116,10 +115,7 @@ class MainMenuBLEFragment : Fragment() {
     private fun hasPermissions(context: Context?, permissions: Array<String>): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (permission in permissions) {
-                if (ActivityCompat.checkSelfPermission(
-                        context, permission
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                     return false
                 }
             }
@@ -127,7 +123,9 @@ class MainMenuBLEFragment : Fragment() {
         return true
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<String?>, grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_PERMISSIONS_ALL -> {
@@ -135,7 +133,8 @@ class MainMenuBLEFragment : Fragment() {
                     Toast.makeText(mainActivity, "Permissions granted!", Toast.LENGTH_SHORT).show()
                 } else {
                     requestPermissions(permissions, REQUEST_PERMISSIONS_ALL)
-                    Toast.makeText(mainActivity, "Permissions must be granted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mainActivity, "Permissions must be granted", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
@@ -235,14 +234,14 @@ class MainMenuBLEFragment : Fragment() {
 //            }
 //        }
 
-        if (bluetoothAdapter == null || !bluetoothAdapter?.isEnabled!!) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-        }
+//        if (bluetoothAdapter == null || !bluetoothAdapter?.isEnabled!!) {
+//            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+//            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+//        }
 
-        if (!hasPermissions(requireContext(), PERMISSIONS)) {
-            requestPermissions(PERMISSIONS, REQUEST_PERMISSIONS_ALL)
-        }
+//        if (!hasPermissions(requireContext(), PERMISSIONS)) {
+//            requestPermissions(PERMISSIONS, REQUEST_PERMISSIONS_ALL)
+//        }
     }
 
     @SuppressLint("MissingPermission")
@@ -280,7 +279,6 @@ class MainMenuBLEFragment : Fragment() {
                         }
                     }
                 }
-
                 Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT)
                     .show()
             } catch (e: IOException) {
@@ -322,6 +320,12 @@ class MainMenuBLEFragment : Fragment() {
             scan_button.visibility = if (scan_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
             } else {
+                View.VISIBLE
+            }
+
+            disconnect_button.visibility = if(disconnect_button.visibility == View.VISIBLE){
+                View.INVISIBLE
+            } else{
                 View.VISIBLE
             }
 
@@ -393,8 +397,6 @@ class MainMenuBLEFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
-        // 2. Context를 액티비티로 형변환해서 할당
         mainActivity = context as MainActivity
     }
 }

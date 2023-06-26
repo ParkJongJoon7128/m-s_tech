@@ -103,7 +103,7 @@ class MainMenuChartFragment : Fragment() {
             BarEntry(3f, 6f),
             BarEntry(4f, 8f),
         )
-        val title = "필터"
+        val title = "필터 청정도"
         val dataSet = BarDataSet(entries, title)
 
         val colors = listOf(Color.YELLOW, Color.GREEN, Color.CYAN, Color.MAGENTA)
