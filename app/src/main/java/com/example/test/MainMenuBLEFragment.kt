@@ -35,6 +35,8 @@ import kotlin.collections.ArrayList
 
 class MainMenuBLEFragment : Fragment() {
 
+    private var test_position = 0
+
     private lateinit var mainActivity: MainActivity
 
     private lateinit var test_button: Button
@@ -44,8 +46,6 @@ class MainMenuBLEFragment : Fragment() {
     private lateinit var scan_button: Button
     private lateinit var disconnect_button: Button
     private lateinit var recyclerView: RecyclerView
-
-    private var test_position = 0
 
     private val REQUEST_ENABLE_BT = 1
     private var bluetoothAdapter: BluetoothAdapter? = null
