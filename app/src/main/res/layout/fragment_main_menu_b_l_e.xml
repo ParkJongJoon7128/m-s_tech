@@ -68,6 +68,8 @@
             android:id="@+id/test_editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:singleLine="true"
             android:hint="단말기로 보낼 데이터 입력" />
     </LinearLayout>
 

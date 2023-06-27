@@ -24,6 +24,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.os.postDelayed
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -185,11 +186,29 @@ class MainMenuBLEFragment : Fragment() {
 
                             val service = bleGatt?.getService(serviceUUID)
                             val characteristic = service?.getCharacteristic(characteristicUUID)
-                            characteristic?.writeType =
-                                BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-                            characteristic?.value = result
-                            bleGatt?.writeCharacteristic(characteristic)
+
+                            if(result.size <= 20){
+                                characteristic?.value = result
+                                bleGatt?.writeCharacteristic(characteristic)
+                            } else{
+                                val numPackets = (result.size + 19) / 20
+                                for (i in 0 until numPackets) {
+                                    val packetSize = if(i < numPackets - 1) {
+                                        20
+                                    } else{
+                                        result.size % 20
+                                    }
+                                    val packet = result.copyOfRange(i * 20, i * 20 + packetSize)
+                                    characteristic?.value = packet
+                                    bleGatt?.writeCharacteristic(characteristic)
+                                    Thread.sleep(10)
+                                }
+                            }
                             dialog.dismiss()
+//                            characteristic?.writeType =
+//                                BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+//                            characteristic?.value = result
+//                            bleGatt?.writeCharacteristic(characteristic)
                         }.setNegativeButton("취소") { dialog, _ ->
                             // 취소 버튼을 누른 경우의 동작 추가
                             dialog.dismiss()
@@ -257,30 +276,33 @@ class MainMenuBLEFragment : Fragment() {
 //            bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
 
             try {
-                if (bleGatt != null && bleGatt?.connect() == true) {
-                    val test_text = test_editText.text.toString()
-                    val result = test_text.toByteArray()
+                if(test_editText.text.toString().isEmpty()) {
+                    Toast.makeText(mainActivity, "값을 입력하고 버튼을 눌러주세요", Toast.LENGTH_SHORT).show()
+                } else{
+                    if (bleGatt != null && bleGatt?.connect() == true) {
+                        val test_text = test_editText.text.toString()
+                        val result = test_text.toByteArray()
 
-                    val service = bleGatt?.getService(serviceUUID)
-                    val characteristic = service?.getCharacteristic(characteristicUUID)
+                        val service = bleGatt?.getService(serviceUUID)
+                        val characteristic = service?.getCharacteristic(characteristicUUID)
 
-                    if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
-                        characteristic?.value = result
-                        bleGatt?.writeCharacteristic(characteristic)
-                    } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
-                        val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
-                        for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
-                            val packetSize =
-                                if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
-                            val packet = result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
-                            characteristic?.value = packet
+                        if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
+                            characteristic?.value = result
                             bleGatt?.writeCharacteristic(characteristic)
-                            Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
+                        } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
+                            val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
+                            for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
+                                val packetSize =
+                                    if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
+                                val packet = result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
+                                characteristic?.value = packet
+                                bleGatt?.writeCharacteristic(characteristic)
+                                Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
+                            }
                         }
                     }
+                    Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT).show()
                 }
-                Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT)
-                    .show()
             } catch (e: IOException) {
                 Toast.makeText(mainActivity, e.message, Toast.LENGTH_SHORT).show()
             }
@@ -308,10 +330,14 @@ class MainMenuBLEFragment : Fragment() {
                 bluetooth_button.isChecked = true
                 scan_button.isVisible = false
                 disconnect_button.isVisible = false
+                test_button.isVisible = false
+                test_editText.isVisible = false
             } else {
                 bluetooth_button.isChecked = false
                 scan_button.isVisible = true
                 disconnect_button.isVisible = true
+                test_button.isVisible = true
+                test_editText.isVisible = true
             }
         }
 
@@ -324,6 +350,18 @@ class MainMenuBLEFragment : Fragment() {
             }
 
             disconnect_button.visibility = if(disconnect_button.visibility == View.VISIBLE){
+                View.INVISIBLE
+            } else{
+                View.VISIBLE
+            }
+
+            test_button.visibility = if(test_button.visibility == View.VISIBLE){
+                View.INVISIBLE
+            } else{
+                View.VISIBLE
+            }
+
+            test_editText.visibility = if(test_editText.visibility == View.VISIBLE) {
                 View.INVISIBLE
             } else{
                 View.VISIBLE
