@@ -82,10 +82,11 @@ class DeviceControlActivity(
         if (bluetoothGatt != null) {
             bluetoothGatt?.disconnect()
             bluetoothGatt?.close()
-            bluetoothGatt = null
 
             Log.i(TAG, "Disconnected to GATT server.")
-            Toast.makeText(context, "Disconnected device", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Disconnected ${bluetoothGatt?.device?.name}", Toast.LENGTH_SHORT).show()
+
+            bluetoothGatt = null
         } else{
             Toast.makeText(context, "기기와 연결되어있지 않습니다", Toast.LENGTH_SHORT).show()
         }
