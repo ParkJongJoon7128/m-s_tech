@@ -97,6 +97,19 @@ class MainMenuChartFragment : Fragment() {
     }
 
     private fun setupChart() {
+
+        // 단말기가 핸드폰으로 필터 오염도 상태에 대한 데이터를 보낼때 저장하기 위해 개발중...
+//        val test_entries = mutableListOf<BarEntry>()
+//        val xAxisLabels = mutableListOf<String>()
+//
+//
+//        val xAxis = filterChart.xAxis
+//
+//        xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
+
+
+
+
         val entries = listOf(
             BarEntry(1f, 2f),
             BarEntry(2f, 4f),

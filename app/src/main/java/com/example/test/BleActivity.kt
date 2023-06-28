@@ -194,6 +194,11 @@ class BleActivity : AppCompatActivity() {
                                 characteristic?.value = packet
                                 bleGatt?.writeCharacteristic(characteristic)
                                 Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
+
+
+
+                                //read 테스트
+                                bleGatt?.readCharacteristic(characteristic)
                             }
                         }
                         dialog.dismiss()
