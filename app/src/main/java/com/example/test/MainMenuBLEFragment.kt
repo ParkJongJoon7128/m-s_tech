@@ -77,8 +77,8 @@ class MainMenuBLEFragment : Fragment() {
                 super.onBatchScanResults(results)
                 results?.let {
                     for (result in it) {
-                        // if (!deviceArr.contains(result.device) && result.device.name != null && result.device.name == "MnS_Tech") {
-                        if (!deviceArr.contains(result.device) && result.device.name != null) {
+                         if (!deviceArr.contains(result.device) && result.device.name != null && result.device.name == "MnS_Tech") {
+//                        if (!deviceArr.contains(result.device) && result.device.name != null) {
                             deviceArr.add(result.device)
                         }
                     }
@@ -89,8 +89,8 @@ class MainMenuBLEFragment : Fragment() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
                 result?.let {
-                    // if (!deviceArr.contains(it.device) && it.device.name != null && it.device.name == "MnS_Tech") {
-                    if (!deviceArr.contains(it.device) && it.device.name != null) {
+                     if (!deviceArr.contains(it.device) && it.device.name != null && it.device.name == "MnS_Tech") {
+//                    if (!deviceArr.contains(it.device) && it.device.name != null) {
                         deviceArr.add(it.device)
                     }
                     recyclerViewAdapter.notifyDataSetChanged()
@@ -281,7 +281,10 @@ class MainMenuBLEFragment : Fragment() {
                 } else{
                     if (bleGatt != null && bleGatt?.connect() == true) {
                         val test_text = test_editText.text.toString()
-                        val result = test_text.toByteArray()
+                        val CR = "\r"
+                        val LF = "\n"
+
+                        val result = (test_text + CR + LF).toByteArray()
 
                         val service = bleGatt?.getService(serviceUUID)
                         val characteristic = service?.getCharacteristic(characteristicUUID)
@@ -289,6 +292,8 @@ class MainMenuBLEFragment : Fragment() {
                         if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
                             characteristic?.value = result
                             bleGatt?.writeCharacteristic(characteristic)
+                            Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT).show()
+                            test_editText.text = null
                         } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
                             val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
                             for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
@@ -299,9 +304,10 @@ class MainMenuBLEFragment : Fragment() {
                                 bleGatt?.writeCharacteristic(characteristic)
                                 Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
                             }
+                            Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT).show()
+                            test_editText.text = null
                         }
                     }
-                    Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: IOException) {
                 Toast.makeText(mainActivity, e.message, Toast.LENGTH_SHORT).show()

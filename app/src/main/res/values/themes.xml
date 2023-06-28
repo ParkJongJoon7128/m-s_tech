@@ -12,7 +12,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/white</item>
         <!-- Status bar & Navigation bar color. -->
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+<!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
     </style>
 </resources>
