@@ -30,9 +30,6 @@ import java.util.*
 
 @SuppressLint("MissingPermission")
 class BleActivity : AppCompatActivity() {
-
-    private var test_position = 0
-
     private val REQUEST_ENABLE_BT = 1
     private var bluetoothAdapter: BluetoothAdapter? = null
 
@@ -211,9 +208,6 @@ class BleActivity : AppCompatActivity() {
         }
 
         test_button.setOnClickListener {
-//            val device = deviceArr.get(test_position)
-//            bleGatt = DeviceControlActivity(mContext, bleGatt).connectGatt(device)
-
             try {
                 if (bleGatt != null && bleGatt?.connect() == true) {
                     val test_text = test_editText.text.toString()
