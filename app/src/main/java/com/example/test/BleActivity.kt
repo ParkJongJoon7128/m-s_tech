@@ -195,7 +195,7 @@ class BleActivity : AppCompatActivity() {
 
 
                                 //read 테스트
-                                bleGatt?.readCharacteristic(characteristic)
+                                //bleGatt?.readCharacteristic(characteristic)
                             }
                         }
                         dialog.dismiss()
