@@ -15,10 +15,13 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
+// ChartScreen에 대한 기능 구현 파일
 class MainMenuChartFragment : Fragment() {
 
+    // BarChart(막대 차트)를 전역 변수로 선언
     private lateinit var filterChart: BarChart
 
+    // 앱을 실행하여 ChartScreen 띄웠을때 레이아웃을 보여주는 기능
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -31,6 +34,7 @@ class MainMenuChartFragment : Fragment() {
         return view
     }
 
+    // BarChart(막대 차트) 차트 내 디자인 부분
     private fun initBarChart(barChart: BarChart) {
         // 차트 회색 배경 설정 (default = false)
         barChart.setDrawGridBackground(false)
@@ -60,6 +64,7 @@ class MainMenuChartFragment : Fragment() {
         xAxis.setDrawAxisLine(false)
         // 격자선 설정 (default = true)
         xAxis.setDrawGridLines(false)
+        // x축 title 글자 크기
         xAxis.textSize = 20f
         // X축의 레이블을 변경하는 부분입니다.
         val labels = listOf("", "필터1", "필터2", "필터3", "필터4")
@@ -70,6 +75,7 @@ class MainMenuChartFragment : Fragment() {
         leftAxis.setDrawAxisLine(false)
         // 좌측 텍스트 컬러 설정
         leftAxis.textColor = Color.BLACK
+        // y축 title 글자 크기
         leftAxis.textSize = 20f
 
         val rightAxis: YAxis = barChart.axisRight
@@ -96,20 +102,8 @@ class MainMenuChartFragment : Fragment() {
         legend.setDrawInside(false)
     }
 
+    // BarChart(막대 차트) 수치적, 색감적 디자인 부분
     private fun setupChart() {
-
-        // 단말기가 핸드폰으로 필터 오염도 상태에 대한 데이터를 보낼때 저장하기 위해 개발중...
-//        val test_entries = mutableListOf<BarEntry>()
-//        val xAxisLabels = mutableListOf<String>()
-//
-//
-//        val xAxis = filterChart.xAxis
-//
-//        xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
-
-
-
-
         val entries = listOf(
             BarEntry(1f, 2f),
             BarEntry(2f, 4f),

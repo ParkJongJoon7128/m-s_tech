@@ -14,15 +14,18 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import com.example.test.R
 
+// WebViewScreen에 대한 기능 구현 파일
 class MainMenuWebViewFragment : Fragment() {
     private lateinit var webView: WebView
 
+    // 앱을 실행하여 WebViewScreen 띄웠을때 레이아웃을 보여주는 기능
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_main_menu_web_view, container, false)
         webView = view.findViewById(R.id.Webview)
         return view
     }
 
+    // WebView의 세세적 기능 구현
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -86,6 +89,7 @@ class MainMenuWebViewFragment : Fragment() {
                 }
             }
 
+            // 카카오 주소 api 사용했을시 dialog 안뜨는걸 방지한 코드
             webChromeClient = object : WebChromeClient() {
                 override fun onCreateWindow(view: WebView?, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean {
                     val newWebView = WebView(requireContext()).apply {
@@ -114,11 +118,13 @@ class MainMenuWebViewFragment : Fragment() {
         }
     }
 
+    // 핸드폰에서 back button 클릭시 뒤로가기 기능 구현 기능
     override fun onResume() {
         super.onResume()
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
     }
 
+    // 핸드폰에서 back button 클릭시 뒤로가기 기능 구현 파트
     override fun onPause() {
         super.onPause()
         onBackPressedCallback.remove()

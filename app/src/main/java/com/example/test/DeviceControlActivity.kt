@@ -14,12 +14,15 @@ import androidx.appcompat.app.AppCompatActivity
 
 private val TAG = "gattClienCallback"
 
+// BLE 컨트롤에 대한 기능 구현 파일
 class DeviceControlActivity(
     private val context: Context?, private var bluetoothGatt: BluetoothGatt?
 ) : AppCompatActivity() {
     private var device: BluetoothDevice? = null
     private val gattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
         @SuppressLint("MissingPermission")
+
+        //BLE 하기 위한 GATT 서버를 열어줘야 되는데, GATT 서버에 대한 연결 유무 판단
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
             super.onConnectionStateChange(gatt, status, newState)
             when (newState) {
@@ -38,6 +41,7 @@ class DeviceControlActivity(
             }
         }
 
+        // 탐색한 bluetooth 기기중 연결했을시 결과값
         @SuppressLint("MissingPermission")
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
@@ -63,6 +67,8 @@ class DeviceControlActivity(
             mHandler.obtainMessage().sendToTarget()
         }
     }
+
+    // 탐색한 bluetooth 기기중 원하는 기기 연결하는 함수
     @SuppressLint("MissingPermission")
     fun connectGatt(device: BluetoothDevice): BluetoothGatt? {
         this.device = device
@@ -76,6 +82,7 @@ class DeviceControlActivity(
         return bluetoothGatt
     }
 
+    // 연결한 bluetooth 기기 연결 해제 시키는 함수
     @SuppressLint("MissingPermission")
     fun disconnectGattServer(): BluetoothGatt? {
         Log.d(TAG, "Closing Gatt connection")

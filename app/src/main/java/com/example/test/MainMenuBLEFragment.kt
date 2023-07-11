@@ -31,6 +31,7 @@ import java.io.IOException
 import java.net.NetworkInterface
 import java.util.*
 
+// BLEScreen에 대한 기능 구현 파일
 class MainMenuBLEFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
 
@@ -62,11 +63,13 @@ class MainMenuBLEFragment : Fragment() {
     private val characteristicUUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
     private val mLeScanCallback =
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP) object : ScanCallback() {
+            // 근처 bluetooth 탐색 실패
             override fun onScanFailed(errorCode: Int) {
                 super.onScanFailed(errorCode)
                 Log.d("scanCallback", "BLE Scan Failed: ${errorCode}")
             }
 
+            // 근처 bluetooth 탐색 성공시, list 형태로 데이터 추가
             @SuppressLint("MissingPermission")
             override fun onBatchScanResults(results: MutableList<ScanResult>?) {
                 super.onBatchScanResults(results)
@@ -80,6 +83,7 @@ class MainMenuBLEFragment : Fragment() {
                 }
             }
 
+            // 근처 bluetooth 탐색 성공시, list 형태로 데이터 추가한 결과 출력
             @SuppressLint("MissingPermission")
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
@@ -93,6 +97,7 @@ class MainMenuBLEFragment : Fragment() {
             }
         }
 
+    // 근처 bluetooth 기기 탐색
     @SuppressLint("MissingPermission")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun scanDevice(state: Boolean) = if (state) {
@@ -108,6 +113,7 @@ class MainMenuBLEFragment : Fragment() {
         bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
     }
 
+    // 처음 앱을 깔아서 BLE 통신을 할때, bluetooth 기능을 작동시키는데 권한 설정 기능(기능적인 부분)
     private fun hasPermissions(context: Context?, permissions: Array<String>): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (permission in permissions) {
@@ -119,6 +125,7 @@ class MainMenuBLEFragment : Fragment() {
         return true
     }
 
+    // 처음 앱을 깔아서 BLE 통신을 할때, bluetooth 기능을 작동시키는데 권한 설정 기능(UI 부분)
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String?>, grantResults: IntArray
     ) {
@@ -145,6 +152,7 @@ class MainMenuBLEFragment : Fragment() {
         }
     }
 
+    // BLE & SSID, PW를 보내는 작업 파트
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -219,6 +227,7 @@ class MainMenuBLEFragment : Fragment() {
             }
     }
 
+    // 모바일 데이터를 이용한 IP 주소의 데이터를 보내는 작업 파트
     @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -276,6 +285,7 @@ class MainMenuBLEFragment : Fragment() {
         return view
     }
 
+    // 각 버튼(Bluetooth On/Off, Scan, Disconnect)에 대한 UI 기능
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -352,6 +362,7 @@ class MainMenuBLEFragment : Fragment() {
         }
     }
 
+    //bluetooth 끄는 기능
     @SuppressLint("MissingPermission")
     fun bluetoothOnOff() {
         if (bluetoothAdapter == null) {
@@ -366,23 +377,27 @@ class MainMenuBLEFragment : Fragment() {
         }
     }
 
+    // BLE를 통해 탐색한 기기들을 list 형태로 보여주기 위한 파트
     class RecyclerViewAdapter(private val myDataset: java.util.ArrayList<BluetoothDevice>) :
         RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {
 
         var mListener: OnItemClickListener? = null
 
+        // list 클릭 이벤트 함수 명시
         interface OnItemClickListener {
             fun onClick(view: View, position: Int)
         }
 
         class MyViewHolder(val linearView: LinearLayout) : RecyclerView.ViewHolder(linearView)
 
+        //하나의 list 연결
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val linearView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.recyclerview_item, parent, false) as LinearLayout
             return MyViewHolder(linearView)
         }
 
+        //BLE 탐색한 data 중 bluetooth name과 address를 list에 text로 연결시켜 넣어주기
         @SuppressLint("MissingPermission")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val itemName: TextView = holder.linearView.findViewById(R.id.item_name)
@@ -405,8 +420,10 @@ class MainMenuBLEFragment : Fragment() {
     }
 }
 
+// BLE 기능 실행시, 탐색하는 시간 간격 기능
 private fun Handler.postDelayed(function: () -> Unit, scanPeriod: Int) {}
 
+// 모바일 데이터 IP 주소 받아오는 기능
 private fun getMobileDataIP(context: Context): String? {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
     if (connectivityManager != null) {

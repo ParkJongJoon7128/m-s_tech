@@ -6,25 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--    xmlns:tools="http://schemas.android.com/tools"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    android:layout_gravity="center"-->
-    <!--    android:background="#fff"-->
-    <!--    android:orientation="vertical"-->
-    <!--    tools:context=".MainActivity">-->
-
-    <!--    <ImageView-->
-    <!--        android:id="@+id/logo"-->
-    <!--        android:layout_width="250dp"-->
-    <!--        android:layout_height="250dp"-->
-    <!--        android:layout_gravity="center_horizontal"-->
-    <!--        android:layout_marginTop="150dp"-->
-    <!--        android:src="@drawable/mnstech_logo" />-->
-
     <FrameLayout
         android:id="@+id/menu_frame_layout"
         android:layout_width="match_parent"
@@ -44,6 +25,7 @@
         android:outlineAmbientShadowColor="@android:color/transparent"
         android:outlineSpotShadowColor="@android:color/transparent"
         app:menu="@menu/menu_bottom" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--    <LinearLayout-->
@@ -92,3 +74,22 @@
     <!--                    android:textColor="#000"-->
     <!--                    android:textSize="14dp" />-->
     <!--    </LinearLayout>-->
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--    xmlns:tools="http://schemas.android.com/tools"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="match_parent"-->
+    <!--    android:layout_gravity="center"-->
+    <!--    android:background="#fff"-->
+    <!--    android:orientation="vertical"-->
+    <!--    tools:context=".MainActivity">-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/logo"-->
+    <!--        android:layout_width="250dp"-->
+    <!--        android:layout_height="250dp"-->
+    <!--        android:layout_gravity="center_horizontal"-->
+    <!--        android:layout_marginTop="150dp"-->
+    <!--        android:src="@drawable/mnstech_logo" />-->
