@@ -10,6 +10,8 @@ import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
@@ -26,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.IOException
+import java.net.NetworkInterface
 import java.util.*
 
 class MainMenuBLEFragment : Fragment() {
@@ -224,17 +227,24 @@ class MainMenuBLEFragment : Fragment() {
         test_button = view.findViewById(R.id.test_button)
         test_editText = view.findViewById(R.id.test_editText)
 
+        val mobileDataIP = getMobileDataIP(mainActivity)
+        val test_IP = mobileDataIP.toString()
+        test_editText.setText(mobileDataIP)
+
+
         test_button.setOnClickListener {
             try {
-                if(test_editText.text.toString().isEmpty()) {
+                if(test_editText.text.toString().isNullOrEmpty()) {
                     Toast.makeText(mainActivity, "값을 입력하고 버튼을 눌러주세요", Toast.LENGTH_SHORT).show()
                 } else{
                     if (bleGatt != null && bleGatt?.connect() == true) {
-                        val test_text = test_editText.text.toString()
+//                        val test_text = test_editText.text.toString()
+//                        val result = (test_text + CR + LF).toByteArray()
                         val CR = "\r"
                         val LF = "\n"
 
-                        val result = (test_text + CR + LF).toByteArray()
+                        val result = (test_IP + CR + LF).toByteArray()
+
 
                         val service = bleGatt?.getService(serviceUUID)
                         val characteristic = service?.getCharacteristic(characteristicUUID)
@@ -396,3 +406,26 @@ class MainMenuBLEFragment : Fragment() {
 }
 
 private fun Handler.postDelayed(function: () -> Unit, scanPeriod: Int) {}
+
+private fun getMobileDataIP(context: Context): String? {
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+    if (connectivityManager != null) {
+        val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
+        if (networkInfo?.type == ConnectivityManager.TYPE_MOBILE) {
+            try {
+                val interfaces = NetworkInterface.getNetworkInterfaces().toList()
+                for (networkInterface in interfaces) {
+                    val addresses = networkInterface.inetAddresses.toList()
+                    for (address in addresses) {
+                        if (!address.isLoopbackAddress && !address.isLinkLocalAddress) {
+                            return address.hostAddress
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+    return null
+}
