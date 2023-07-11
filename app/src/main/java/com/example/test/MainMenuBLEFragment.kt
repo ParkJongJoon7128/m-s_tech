@@ -35,8 +35,8 @@ import java.util.*
 class MainMenuBLEFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
 
-    private lateinit var test_button: Button
-    private lateinit var test_editText: EditText
+    private lateinit var IP_button: Button
+    private lateinit var IP_editText: EditText
 
     private lateinit var bluetooth_button: ToggleButton
     private lateinit var scan_button: Button
@@ -137,16 +137,16 @@ class MainMenuBLEFragment : Fragment() {
                     bluetooth_button.isChecked = true
                     scan_button.isVisible = false
                     disconnect_button.isVisible = false
-                    test_button.isVisible = false
-                    test_editText.isVisible = false
+                    IP_button.isVisible = false
+                    IP_editText.isVisible = false
                 } else {
                     requestPermissions(permissions, REQUEST_PERMISSIONS_ALL)
                     Toast.makeText(mainActivity, "Permissions must be granted", Toast.LENGTH_SHORT).show()
                     bluetooth_button.isChecked = true
                     scan_button.isVisible = false
                     disconnect_button.isVisible = false
-                    test_button.isVisible = false
-                    test_editText.isVisible = false
+                    IP_button.isVisible = false
+                    IP_editText.isVisible = false
                 }
             }
         }
@@ -233,17 +233,18 @@ class MainMenuBLEFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_main_menu_b_l_e, container, false)
-        test_button = view.findViewById(R.id.test_button)
-        test_editText = view.findViewById(R.id.test_editText)
 
-        val mobileDataIP = getMobileDataIP(mainActivity)
-        val test_IP = mobileDataIP.toString()
-        test_editText.setText(mobileDataIP)
+        IP_button = view.findViewById(R.id.IP_button)
+        IP_editText = view.findViewById(R.id.IP_editText)
+
+//        val mobileDataIP = getMobileDataIP(mainActivity)
+        val test_IP = getMobileDataIP(mainActivity).toString()
+        IP_editText.setText(test_IP)
 
 
-        test_button.setOnClickListener {
+        IP_button.setOnClickListener {
             try {
-                if(test_editText.text.toString().isNullOrEmpty()) {
+                if(IP_editText.text.toString().isNullOrEmpty()) {
                     Toast.makeText(mainActivity, "값을 입력하고 버튼을 눌러주세요", Toast.LENGTH_SHORT).show()
                 } else{
                     if (bleGatt != null && bleGatt?.connect() == true) {
@@ -261,8 +262,8 @@ class MainMenuBLEFragment : Fragment() {
                         if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
                             characteristic?.value = result
                             bleGatt?.writeCharacteristic(characteristic)
-                            Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT).show()
-                            test_editText.text = null
+                            Toast.makeText(mainActivity, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
+                            IP_editText.text = null
                         } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
                             val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
                             for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
@@ -273,8 +274,8 @@ class MainMenuBLEFragment : Fragment() {
                                 bleGatt?.writeCharacteristic(characteristic)
                                 Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
                             }
-                            Toast.makeText(mainActivity, test_editText.text.toString(), Toast.LENGTH_SHORT).show()
-                            test_editText.text = null
+                            Toast.makeText(mainActivity, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
+                            IP_editText.text = null
                         }
                     }
                 }
@@ -306,14 +307,14 @@ class MainMenuBLEFragment : Fragment() {
                 bluetooth_button.isChecked = true
                 scan_button.isVisible = false
                 disconnect_button.isVisible = false
-                test_button.isVisible = false
-                test_editText.isVisible = false
+                IP_button.isVisible = false
+                IP_editText.isVisible = false
             } else {
                 bluetooth_button.isChecked = false
                 scan_button.isVisible = true
                 disconnect_button.isVisible = true
-                test_button.isVisible = true
-                test_editText.isVisible = true
+                IP_button.isVisible = true
+                IP_editText.isVisible = true
             }
         }
 
@@ -331,13 +332,13 @@ class MainMenuBLEFragment : Fragment() {
                 View.VISIBLE
             }
 
-            test_button.visibility = if(test_button.visibility == View.VISIBLE){
+            IP_button.visibility = if(IP_button.visibility == View.VISIBLE){
                 View.INVISIBLE
             } else{
                 View.VISIBLE
             }
 
-            test_editText.visibility = if(test_editText.visibility == View.VISIBLE) {
+            IP_editText.visibility = if(IP_editText.visibility == View.VISIBLE) {
                 View.INVISIBLE
             } else{
                 View.VISIBLE
