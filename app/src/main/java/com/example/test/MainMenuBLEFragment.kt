@@ -124,10 +124,19 @@ class MainMenuBLEFragment : Fragment() {
             REQUEST_PERMISSIONS_ALL -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(mainActivity, "Permissions granted!", Toast.LENGTH_SHORT).show()
+                    bluetooth_button.isChecked = true
+                    scan_button.isVisible = false
+                    disconnect_button.isVisible = false
+                    test_button.isVisible = false
+                    test_editText.isVisible = false
                 } else {
                     requestPermissions(permissions, REQUEST_PERMISSIONS_ALL)
-                    Toast.makeText(mainActivity, "Permissions must be granted", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(mainActivity, "Permissions must be granted", Toast.LENGTH_SHORT).show()
+                    bluetooth_button.isChecked = true
+                    scan_button.isVisible = false
+                    disconnect_button.isVisible = false
+                    test_button.isVisible = false
+                    test_editText.isVisible = false
                 }
             }
         }
