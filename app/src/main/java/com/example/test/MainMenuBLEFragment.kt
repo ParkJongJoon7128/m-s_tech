@@ -237,8 +237,12 @@ class MainMenuBLEFragment : Fragment() {
         IP_button = view.findViewById(R.id.IP_button)
         IP_editText = view.findViewById(R.id.IP_editText)
 
-//        val mobileDataIP = getMobileDataIP(mainActivity)
-        val test_IP = getMobileDataIP(mainActivity).toString()
+//        모바일 데이터 ip 주소
+//        val test_IP = getMobileDataIpAddress(mainActivity).toString()
+//        IP_editText.setText(test_IP)
+
+//        연결된 와이파이 ip 주소 받아오기
+        val test_IP = getWifiIpAddress(mainActivity)
         IP_editText.setText(test_IP)
 
 
@@ -248,14 +252,10 @@ class MainMenuBLEFragment : Fragment() {
                     Toast.makeText(mainActivity, "값을 입력하고 버튼을 눌러주세요", Toast.LENGTH_SHORT).show()
                 } else{
                     if (bleGatt != null && bleGatt?.connect() == true) {
-//                        val test_text = test_editText.text.toString()
-//                        val result = (test_text + CR + LF).toByteArray()
                         val CR = "\r"
                         val LF = "\n"
 
                         val result = (test_IP + CR + LF).toByteArray()
-
-
                         val service = bleGatt?.getService(serviceUUID)
                         val characteristic = service?.getCharacteristic(characteristicUUID)
 
@@ -277,6 +277,8 @@ class MainMenuBLEFragment : Fragment() {
                             Toast.makeText(mainActivity, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
                             IP_editText.text = null
                         }
+                    } else{
+                        Toast.makeText(mainActivity, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: IOException) {
@@ -425,25 +427,35 @@ class MainMenuBLEFragment : Fragment() {
 private fun Handler.postDelayed(function: () -> Unit, scanPeriod: Int) {}
 
 // 모바일 데이터 IP 주소 받아오는 기능
-private fun getMobileDataIP(context: Context): String? {
-    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-    if (connectivityManager != null) {
-        val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
-        if (networkInfo?.type == ConnectivityManager.TYPE_MOBILE) {
-            try {
-                val interfaces = NetworkInterface.getNetworkInterfaces().toList()
-                for (networkInterface in interfaces) {
-                    val addresses = networkInterface.inetAddresses.toList()
-                    for (address in addresses) {
-                        if (!address.isLoopbackAddress && !address.isLinkLocalAddress) {
-                            return address.hostAddress
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+private fun getMobileDataIpAddress(context: Context): String? {
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val networkInfo = connectivityManager.activeNetworkInfo
+
+    if (networkInfo != null && networkInfo.isConnected) {
+        if (networkInfo.type == ConnectivityManager.TYPE_MOBILE) {
+            val ipAddress = networkInfo.extraInfo
+
+            // IP 주소 형식 변환
+            val ipString = ipAddress?.removeSurrounding("\"")
+            return ipString
         }
     }
     return null
+}
+
+// WIFI IP 주소 받아오는 기능
+private fun getWifiIpAddress(context: Context): String {
+    val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+    val wifiInfo = wifiManager.connectionInfo
+    val ipAddress = wifiInfo.ipAddress
+
+    // IP 주소 형식 변환
+    val ipString = String.format(
+        "%d.%d.%d.%d",
+        ipAddress and 0xff,
+        ipAddress shr 8 and 0xff,
+        ipAddress shr 16 and 0xff,
+        ipAddress shr 24 and 0xff
+    )
+    return ipString
 }
