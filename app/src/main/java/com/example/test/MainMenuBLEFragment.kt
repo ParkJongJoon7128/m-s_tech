@@ -60,7 +60,9 @@ class MainMenuBLEFragment : Fragment() {
     private var bleGatt: BluetoothGatt? = null
     private var mContext: Context? = null
     private val serviceUUID = UUID.fromString("55e405d2-af9f-a98f-e54a-7dfe43535355")
-    private val characteristicUUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
+    private val characteristic_WRITE_UUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
+//    private val characteristic_READ_UUID = UUID.fromString("")
+
     private val mLeScanCallback =
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP) object : ScanCallback() {
             // 근처 bluetooth 탐색 실패
@@ -197,7 +199,7 @@ class MainMenuBLEFragment : Fragment() {
                             val result = sumData.toByteArray()
 
                             val service = bleGatt?.getService(serviceUUID)
-                            val characteristic = service?.getCharacteristic(characteristicUUID)
+                            val characteristic = service?.getCharacteristic(characteristic_WRITE_UUID)
 
                             if(result.size <= 20){
                                 characteristic?.value = result
@@ -251,7 +253,7 @@ class MainMenuBLEFragment : Fragment() {
 
         IP_button.setOnClickListener {
             try {
-                if(IP_editText.text.toString().isNullOrEmpty()) {
+                if(test_IP.isNullOrEmpty()) {
                     Toast.makeText(localContext, "값을 입력하고 버튼을 눌러주세요", Toast.LENGTH_SHORT).show()
                 } else{
                     if (bleGatt != null && bleGatt?.connect() == true) {
@@ -260,13 +262,12 @@ class MainMenuBLEFragment : Fragment() {
 
                         val result = (test_IP + CR + LF).toByteArray()
                         val service = bleGatt?.getService(serviceUUID)
-                        val characteristic = service?.getCharacteristic(characteristicUUID)
+                        val characteristic = service?.getCharacteristic(characteristic_WRITE_UUID)
 
                         if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
                             characteristic?.value = result
                             bleGatt?.writeCharacteristic(characteristic)
                             Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
-                            IP_editText.text = null
                         } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
                             val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
                             for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
@@ -278,7 +279,6 @@ class MainMenuBLEFragment : Fragment() {
                                 Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
                             }
                             Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
-                            IP_editText.text = null
                         }
                     } else{
                         Toast.makeText(localContext, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT).show()
