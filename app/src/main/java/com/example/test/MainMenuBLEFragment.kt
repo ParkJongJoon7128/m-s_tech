@@ -33,7 +33,7 @@ import java.util.*
 
 // BLEScreen에 대한 기능 구현 파일
 class MainMenuBLEFragment : Fragment() {
-    private lateinit var mainActivity: MainActivity
+    private lateinit var localContext: MainActivity
 
     private lateinit var IP_button: Button
     private lateinit var IP_editText: EditText
@@ -133,7 +133,7 @@ class MainMenuBLEFragment : Fragment() {
         when (requestCode) {
             REQUEST_PERMISSIONS_ALL -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(mainActivity, "Permissions granted!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(localContext, "Permissions granted!", Toast.LENGTH_SHORT).show()
                     bluetooth_button.isChecked = true
                     scan_button.isVisible = false
                     disconnect_button.isVisible = false
@@ -141,7 +141,7 @@ class MainMenuBLEFragment : Fragment() {
                     IP_editText.isVisible = false
                 } else {
                     requestPermissions(permissions, REQUEST_PERMISSIONS_ALL)
-                    Toast.makeText(mainActivity, "Permissions must be granted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(localContext, "Permissions must be granted", Toast.LENGTH_SHORT).show()
                     bluetooth_button.isChecked = true
                     scan_button.isVisible = false
                     disconnect_button.isVisible = false
@@ -157,7 +157,7 @@ class MainMenuBLEFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mContext = mainActivity
+        mContext = localContext
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         viewManager = LinearLayoutManager(mContext)
@@ -237,19 +237,22 @@ class MainMenuBLEFragment : Fragment() {
         IP_button = view.findViewById(R.id.IP_button)
         IP_editText = view.findViewById(R.id.IP_editText)
 
-//        모바일 데이터 ip 주소
-//        val test_IP = getMobileDataIpAddress(mainActivity).toString()
-//        IP_editText.setText(test_IP)
 
 //        연결된 와이파이 ip 주소 받아오기
-        val test_IP = getWifiIpAddress(mainActivity)
+        val test_IP = getWifiIpAddress(localContext)
         IP_editText.setText(test_IP)
+
+
+//        모바일 데이터 ip 주소
+//        val test_IP = getMobileDataIpAddress(localContext).toString()
+//        IP_editText.setText(test_IP)
+
 
 
         IP_button.setOnClickListener {
             try {
                 if(IP_editText.text.toString().isNullOrEmpty()) {
-                    Toast.makeText(mainActivity, "값을 입력하고 버튼을 눌러주세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(localContext, "값을 입력하고 버튼을 눌러주세요", Toast.LENGTH_SHORT).show()
                 } else{
                     if (bleGatt != null && bleGatt?.connect() == true) {
                         val CR = "\r"
@@ -262,7 +265,7 @@ class MainMenuBLEFragment : Fragment() {
                         if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
                             characteristic?.value = result
                             bleGatt?.writeCharacteristic(characteristic)
-                            Toast.makeText(mainActivity, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
                             IP_editText.text = null
                         } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
                             val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
@@ -274,15 +277,15 @@ class MainMenuBLEFragment : Fragment() {
                                 bleGatt?.writeCharacteristic(characteristic)
                                 Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
                             }
-                            Toast.makeText(mainActivity, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
                             IP_editText.text = null
                         }
                     } else{
-                        Toast.makeText(mainActivity, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(localContext, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: IOException) {
-                Toast.makeText(mainActivity, e.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(localContext, e.message, Toast.LENGTH_SHORT).show()
             }
         }
         return view
@@ -354,7 +357,7 @@ class MainMenuBLEFragment : Fragment() {
         }
 
         scan_button.setOnClickListener { v: View? ->
-            if (!hasPermissions(mainActivity, PERMISSIONS)) {
+            if (!hasPermissions(localContext, PERMISSIONS)) {
                 requestPermissions(PERMISSIONS, REQUEST_PERMISSIONS_ALL)
             }
             scanDevice(true)
@@ -419,7 +422,7 @@ class MainMenuBLEFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mainActivity = context as MainActivity
+        localContext = context as MainActivity
     }
 }
 
