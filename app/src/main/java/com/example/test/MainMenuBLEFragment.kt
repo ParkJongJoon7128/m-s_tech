@@ -12,7 +12,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
@@ -29,7 +28,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.IOException
-import java.net.NetworkInterface
 import java.util.*
 
 // BLEScreen에 대한 기능 구현 파일
@@ -38,6 +36,7 @@ class MainMenuBLEFragment : Fragment() {
 
     private lateinit var IP_button: Button
     private lateinit var IP_editText: EditText
+    private lateinit var read_button: Button
 
     private lateinit var bluetooth_button: ToggleButton
     private lateinit var scan_button: Button
@@ -120,7 +119,10 @@ class MainMenuBLEFragment : Fragment() {
     private fun hasPermissions(context: Context?, permissions: Array<String>): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
             for (permission in permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(
+                        context, permission
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
                     return false
                 }
             }
@@ -142,14 +144,17 @@ class MainMenuBLEFragment : Fragment() {
                     disconnect_button.isVisible = false
                     IP_button.isVisible = false
                     IP_editText.isVisible = false
+                    read_button.isVisible = false
                 } else {
                     requestPermissions(permissions, REQUEST_PERMISSIONS_ALL)
-                    Toast.makeText(localContext, "Permissions must be granted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(localContext, "Permissions must be granted", Toast.LENGTH_SHORT)
+                        .show()
                     bluetooth_button.isChecked = true
                     scan_button.isVisible = false
                     disconnect_button.isVisible = false
                     IP_button.isVisible = false
                     IP_editText.isVisible = false
+                    read_button.isVisible = false
                 }
             }
         }
@@ -200,17 +205,18 @@ class MainMenuBLEFragment : Fragment() {
                             val result = sumData.toByteArray()
 
                             val service = bleGatt?.getService(serviceUUID)
-                            val characteristic = service?.getCharacteristic(characteristic_WRITE_UUID)
+                            val characteristic =
+                                service?.getCharacteristic(characteristic_WRITE_UUID)
 
-                            if(result.size <= 20){
+                            if (result.size <= 20) {
                                 characteristic?.value = result
                                 bleGatt?.writeCharacteristic(characteristic)
-                            } else{
+                            } else {
                                 val numPackets = (result.size + 19) / 20
                                 for (i in 0 until numPackets) {
-                                    val packetSize = if(i < numPackets - 1) {
+                                    val packetSize = if (i < numPackets - 1) {
                                         20
-                                    } else{
+                                    } else {
                                         result.size % 20
                                     }
                                     val packet = result.copyOfRange(i * 20, i * 20 + packetSize)
@@ -239,6 +245,8 @@ class MainMenuBLEFragment : Fragment() {
 
         IP_button = view.findViewById(R.id.IP_button)
         IP_editText = view.findViewById(R.id.IP_editText)
+        read_button = view.findViewById(R.id.read_button)
+
 
 
 //        연결된 와이파이 ip 주소 받아오기
@@ -251,12 +259,11 @@ class MainMenuBLEFragment : Fragment() {
 //        IP_editText.setText(test_IP)
 
 
-
         IP_button.setOnClickListener {
             try {
-                if(test_IP.isNullOrEmpty()) {
+                if (test_IP.isNullOrEmpty()) {
                     Toast.makeText(localContext, "값을 입력하고 버튼을 눌러주세요", Toast.LENGTH_SHORT).show()
-                } else{
+                } else {
                     if (bleGatt != null && bleGatt?.connect() == true) {
                         val CR = "\r"
                         val LF = "\n"
@@ -267,38 +274,60 @@ class MainMenuBLEFragment : Fragment() {
 
                         if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
                             characteristic?.value = result
-                            characteristic?.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                            characteristic?.writeType =
+                                BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                             bleGatt?.writeCharacteristic(characteristic)
 
-                            bleGatt?.readCharacteristic(characteristic)
-                            Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
+//                            bleGatt?.readCharacteristic(characteristic)
+                            Toast.makeText(
+                                localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT
+                            ).show()
                         } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
                             val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
                             for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
                                 val packetSize =
                                     if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
-                                val packet = result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
+                                val packet =
+                                    result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
                                 characteristic?.value = packet
-                                characteristic?.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                                characteristic?.writeType =
+                                    BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                                 bleGatt?.writeCharacteristic(characteristic)
 
-                                bleGatt?.readCharacteristic(characteristic)
+//                                bleGatt?.readCharacteristic(characteristic)
                                 Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
                             }
-                            Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT
+                            ).show()
                         }
-                    } else{
-                        Toast.makeText(localContext, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(localContext, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             } catch (e: IOException) {
                 Toast.makeText(localContext, e.message, Toast.LENGTH_SHORT).show()
             }
         }
+
+        read_button.setOnClickListener {
+            if (bleGatt != null && bleGatt?.connect() == true) {
+                val service = bleGatt?.getService(serviceUUID)
+                val characteristic = service?.getCharacteristic(characteristic_WRITE_UUID)
+
+                bleGatt?.readCharacteristic(characteristic)
+                Toast.makeText(localContext, bleGatt?.readCharacteristic(characteristic).toString(), Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(localContext, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         return view
     }
 
     // 각 버튼(Bluetooth On/Off, Scan, Disconnect)에 대한 UI 기능
+    @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -321,12 +350,14 @@ class MainMenuBLEFragment : Fragment() {
                 disconnect_button.isVisible = false
                 IP_button.isVisible = false
                 IP_editText.isVisible = false
+                read_button.isVisible = false
             } else {
                 bluetooth_button.isChecked = false
                 scan_button.isVisible = true
                 disconnect_button.isVisible = true
                 IP_button.isVisible = true
                 IP_editText.isVisible = true
+                read_button.isVisible = true
             }
         }
 
@@ -338,21 +369,27 @@ class MainMenuBLEFragment : Fragment() {
                 View.VISIBLE
             }
 
-            disconnect_button.visibility = if(disconnect_button.visibility == View.VISIBLE){
+            disconnect_button.visibility = if (disconnect_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
-            } else{
+            } else {
                 View.VISIBLE
             }
 
-            IP_button.visibility = if(IP_button.visibility == View.VISIBLE){
+            IP_button.visibility = if (IP_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
-            } else{
+            } else {
                 View.VISIBLE
             }
 
-            IP_editText.visibility = if(IP_editText.visibility == View.VISIBLE) {
+            IP_editText.visibility = if (IP_editText.visibility == View.VISIBLE) {
                 View.INVISIBLE
-            } else{
+            } else {
+                View.VISIBLE
+            }
+
+            read_button.visibility = if (read_button.visibility == View.VISIBLE) {
+                View.INVISIBLE
+            } else {
                 View.VISIBLE
             }
 
@@ -438,7 +475,8 @@ private fun Handler.postDelayed(function: () -> Unit, scanPeriod: Int) {}
 
 // 모바일 데이터 IP 주소 받아오는 기능
 private fun getMobileDataIpAddress(context: Context): String? {
-    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val networkInfo = connectivityManager.activeNetworkInfo
 
     if (networkInfo != null && networkInfo.isConnected) {
@@ -455,7 +493,8 @@ private fun getMobileDataIpAddress(context: Context): String? {
 
 // WIFI IP 주소 받아오는 기능
 private fun getWifiIpAddress(context: Context): String {
-    val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+    val wifiManager =
+        context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
     val wifiInfo = wifiManager.connectionInfo
     val ipAddress = wifiInfo.ipAddress
 
