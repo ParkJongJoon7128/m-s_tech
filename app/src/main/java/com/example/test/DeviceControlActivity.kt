@@ -57,6 +57,41 @@ class DeviceControlActivity(
             }
         }
 
+        // onCharacteristicWrite 메서드 추가
+        override fun onCharacteristicWrite(
+            gatt: BluetoothGatt?,
+            characteristic: BluetoothGattCharacteristic?,
+            status: Int
+        ) {
+            super.onCharacteristicWrite(gatt, characteristic, status)
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.d(TAG, "Characteristic written successfully")
+            } else {
+                Log.e(TAG, "Characteristic write unsuccessful, status: $status")
+                disconnectGattServer()
+            }
+        }
+
+        // onCharacteristicRead 메서드 추가
+        override fun onCharacteristicRead(
+            gatt: BluetoothGatt?,
+            characteristic: BluetoothGattCharacteristic?,
+            status: Int
+        ) {
+            super.onCharacteristicRead(gatt, characteristic, status)
+            when (status) {
+                BluetoothGatt.GATT_SUCCESS -> {
+                    // 읽어온 값을 로그로 확인합니다.
+                    val value = characteristic?.value?.toString(Charsets.UTF_8)
+                    Log.d(TAG, "Read characteristic value: $value")
+                }
+                else -> {
+                    Log.d(TAG, "Characteristic read failed, status: $status")
+                    disconnectGattServer()
+                }
+            }
+        }
+
         private fun broadcastUpdate(str: String) {
             val mHandler: Handler = object : Handler(Looper.getMainLooper()) {
                 override fun handleMessage(msg: Message) {

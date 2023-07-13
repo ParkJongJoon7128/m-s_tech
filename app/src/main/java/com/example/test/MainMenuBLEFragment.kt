@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
@@ -266,7 +267,10 @@ class MainMenuBLEFragment : Fragment() {
 
                         if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
                             characteristic?.value = result
+                            characteristic?.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                             bleGatt?.writeCharacteristic(characteristic)
+
+                            bleGatt?.readCharacteristic(characteristic)
                             Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
                         } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
                             val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
@@ -275,7 +279,10 @@ class MainMenuBLEFragment : Fragment() {
                                     if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
                                 val packet = result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
                                 characteristic?.value = packet
+                                characteristic?.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                                 bleGatt?.writeCharacteristic(characteristic)
+
+                                bleGatt?.readCharacteristic(characteristic)
                                 Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
                             }
                             Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
