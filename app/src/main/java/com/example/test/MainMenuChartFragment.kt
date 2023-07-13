@@ -104,21 +104,30 @@ class MainMenuChartFragment : Fragment() {
 
     // BarChart(막대 차트) 수치적, 색감적 디자인 부분
     private fun setupChart() {
+
+        //임시 chart 데이터를 명시(x는 차트의 개수, y는 차트의 데이터 수치를 표현)
         val entries = listOf(
             BarEntry(1f, 2f),
             BarEntry(2f, 4f),
             BarEntry(3f, 6f),
             BarEntry(4f, 8f),
         )
+
+        //차트 제목
         val title = "필터 청정도"
+
+        //차트에 데이터 연결
         val dataSet = BarDataSet(entries, title)
 
+        // 막대 차트 색 지정 및 막대 차트 name 크기 조정
         val colors = listOf(Color.YELLOW, Color.GREEN, Color.CYAN, Color.MAGENTA)
         dataSet.colors = colors
         dataSet.valueTextSize = 20f
 
+        //차트에 데이터 연결
         val data = BarData(dataSet)
 
+        //차트에 데이터 넣기
         filterChart.data = data
         filterChart.invalidate()
     }

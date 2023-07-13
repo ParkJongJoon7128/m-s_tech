@@ -60,7 +60,8 @@ class MainMenuBLEFragment : Fragment() {
     private var bleGatt: BluetoothGatt? = null
     private var mContext: Context? = null
     private val serviceUUID = UUID.fromString("55e405d2-af9f-a98f-e54a-7dfe43535355")
-    private val characteristic_WRITE_UUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
+    private val characteristic_UUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
+//    private val characteristic_UUID = UUID.fromString("b39b7234-beec-d4a8-f443-418843535349")
 //    private val characteristic_READ_UUID = UUID.fromString("")
 
     private val mLeScanCallback =
@@ -205,8 +206,7 @@ class MainMenuBLEFragment : Fragment() {
                             val result = sumData.toByteArray()
 
                             val service = bleGatt?.getService(serviceUUID)
-                            val characteristic =
-                                service?.getCharacteristic(characteristic_WRITE_UUID)
+                            val characteristic = service?.getCharacteristic(characteristic_UUID)
 
                             if (result.size <= 20) {
                                 characteristic?.value = result
@@ -270,7 +270,7 @@ class MainMenuBLEFragment : Fragment() {
 
                         val result = (test_IP + CR + LF).toByteArray()
                         val service = bleGatt?.getService(serviceUUID)
-                        val characteristic = service?.getCharacteristic(characteristic_WRITE_UUID)
+                        val characteristic = service?.getCharacteristic(characteristic_UUID)
 
                         if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
                             characteristic?.value = result
@@ -314,8 +314,9 @@ class MainMenuBLEFragment : Fragment() {
         read_button.setOnClickListener {
             if (bleGatt != null && bleGatt?.connect() == true) {
                 val service = bleGatt?.getService(serviceUUID)
-                val characteristic = service?.getCharacteristic(characteristic_WRITE_UUID)
+                val characteristic = service?.getCharacteristic(characteristic_UUID)
 
+                bleGatt?.setCharacteristicNotification(characteristic, true)
                 bleGatt?.readCharacteristic(characteristic)
                 Toast.makeText(localContext, bleGatt?.readCharacteristic(characteristic).toString(), Toast.LENGTH_SHORT).show()
             } else {
