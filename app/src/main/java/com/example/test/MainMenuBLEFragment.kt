@@ -268,7 +268,7 @@ class MainMenuBLEFragment : Fragment() {
 //        val test_IP = getMobileDataIpAddress(localContext).toString()
 //        IP_editText.setText(test_IP)
 
-
+        // 와이파이 IP or 모바일 데이터 IP를 핸드폰에서 단말기로 보내는 기능
         IP_button.setOnClickListener {
             try {
                 if (test_IP.isNullOrEmpty()) {
@@ -321,6 +321,7 @@ class MainMenuBLEFragment : Fragment() {
             }
         }
 
+        // READ 버튼 클릭시, 단말기가 핸드폰으로 보내는 데이터를 받아와 읽는 기능
         read_button.setOnClickListener {
             if (bleGatt != null && bleGatt?.connect() == true) {
                 val service = bleGatt?.getService(serviceUUID)
@@ -354,6 +355,7 @@ class MainMenuBLEFragment : Fragment() {
             adapter = recyclerViewAdapter
         }
 
+        // 블루투스 권한 설정의 값에 따라 4개의 버튼 보여지는 유무 설정
         if (bluetoothAdapter != null) {
             if (bluetoothAdapter?.isEnabled == false) {
                 bluetooth_button.isChecked = true
@@ -372,38 +374,49 @@ class MainMenuBLEFragment : Fragment() {
             }
         }
 
-        bluetooth_button.setOnCheckedChangeListener { _, isChecked ->
+            //블루투스 기능을 켜는 버튼
+            //visible일 경우 다른 버튼도 visible 형태로 보여지게 됨.
+            //invisible일 경우 다른 버튼도 invisible 형태로 안보여지게 됨.
+            bluetooth_button.setOnCheckedChangeListener { _, isChecked ->
             bluetoothOnOff()
             scan_button.visibility = if (scan_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
             } else {
                 View.VISIBLE
             }
-
+                //visible일 경우 다른 버튼도 visible 형태로 보여지게 됨.
+                //invisible일 경우 다른 버튼도 invisible 형태로 안보여지게 됨.
             disconnect_button.visibility = if (disconnect_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
             } else {
                 View.VISIBLE
             }
 
+                //visible일 경우 다른 버튼도 visible 형태로 보여지게 됨.
+                //invisible일 경우 다른 버튼도 invisible 형태로 안보여지게 됨.
             IP_button.visibility = if (IP_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
             } else {
                 View.VISIBLE
             }
 
+                //visible일 경우 다른 버튼도 visible 형태로 보여지게 됨.
+                //invisible일 경우 다른 버튼도 invisible 형태로 안보여지게 됨.
             IP_editText.visibility = if (IP_editText.visibility == View.VISIBLE) {
                 View.INVISIBLE
             } else {
                 View.VISIBLE
             }
 
+                //visible일 경우 다른 버튼도 visible 형태로 보여지게 됨.
+                //invisible일 경우 다른 버튼도 invisible 형태로 안보여지게 됨.
             read_button.visibility = if (read_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
             } else {
                 View.VISIBLE
             }
 
+                //SCAN 버튼이 안보일 경우, 스캔을 중단하고, 탐색해서 나온 list들도 초기화
             if (scan_button.visibility == View.INVISIBLE) {
                 scanDevice(false)
                 deviceArr.clear()
@@ -411,6 +424,7 @@ class MainMenuBLEFragment : Fragment() {
             }
         }
 
+        //SCAN 버튼 클릭시 블루투스 기기 탐색하는 기능
         scan_button.setOnClickListener { v: View? ->
             if (!hasPermissions(localContext, PERMISSIONS)) {
                 requestPermissions(PERMISSIONS, REQUEST_PERMISSIONS_ALL)
@@ -418,7 +432,8 @@ class MainMenuBLEFragment : Fragment() {
             scanDevice(true)
         }
 
-        disconnect_button.setOnClickListener {
+        //DISCONNECT 버튼 클릭시 연결된 블루투스 기기와 연결을 끊는 기능
+       disconnect_button.setOnClickListener {
             bleGatt = DeviceControlActivity(mContext, bleGatt).disconnectGattServer()
         }
     }
@@ -475,6 +490,7 @@ class MainMenuBLEFragment : Fragment() {
         override fun getItemCount(): Int = myDataset.size
     }
 
+    // localContext를 전역 변수로 사용할수 있게 명시
     override fun onAttach(context: Context) {
         super.onAttach(context)
         localContext = context as MainActivity
