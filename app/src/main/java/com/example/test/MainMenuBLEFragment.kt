@@ -78,7 +78,9 @@ class MainMenuBLEFragment : Fragment() {
                 super.onBatchScanResults(results)
                 results?.let {
                     for (result in it) {
+                            // 블루투스 기기 탐색할때 회사 단말기만 보이게 할때 아래 주석 사용
 //                         if (!deviceArr.contains(result.device) && result.device.name != null && result.device.name == "MnS_Tech") {
+                        // 블루투스 기기 탐색할때 근처에 있는 전체 블루투스 기기 보이게 할때 아래 코드 사용
                         if (!deviceArr.contains(result.device) && result.device.name != null) {
                             deviceArr.add(result.device)
                         }
@@ -91,7 +93,9 @@ class MainMenuBLEFragment : Fragment() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
                 result?.let {
+                        // 블루투스 기기 탐색할때 회사 단말기만 보이게 할때 아래 주석 사용
 //                     if (!deviceArr.contains(it.device) && it.device.name != null && it.device.name == "MnS_Tech") {
+                    // 블루투스 기기 탐색할때 근처에 있는 전체 블루투스 기기 보이게 할때 아래 코드 사용
                     if (!deviceArr.contains(it.device) && it.device.name != null) {
                         deviceArr.add(it.device)
                     }
@@ -103,15 +107,21 @@ class MainMenuBLEFragment : Fragment() {
     // 근처 bluetooth 기기 탐색
     @SuppressLint("MissingPermission")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun scanDevice(state: Boolean) = if (state) {
-        handler.postDelayed({
-            scanning = false
-            bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
-        }, SCAN_PERIOD)
-        scanning = true
-        deviceArr.clear()
-        bluetoothAdapter?.bluetoothLeScanner?.startScan(mLeScanCallback)
-    } else {
+    private fun scanDevice(state: Boolean) =
+
+        // state = true 일때, 스캔 시작하고, 탐색 시간간격은 1초 간격.
+        // 탐색하는 도중 다시 SCAN 버튼을 누르면, List 초기화 되고 재탐색
+        if (state) {
+            handler.postDelayed({
+                scanning = false
+                bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
+            }, SCAN_PERIOD)
+            scanning = true
+            deviceArr.clear()
+            bluetoothAdapter?.bluetoothLeScanner?.startScan(mLeScanCallback)
+    }
+        // state = false, 탐색 종료
+        else {
         scanning = false
         bluetoothAdapter?.bluetoothLeScanner?.stopScan(mLeScanCallback)
     }

@@ -129,6 +129,8 @@ class MainMenuWebViewFragment : Fragment() {
         super.onPause()
         onBackPressedCallback.remove()
     }
+
+    // 핸드폰에서 back button 클릭시 뒤로가기 기능 구현 파트
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             if (webView.canGoBack()) {
