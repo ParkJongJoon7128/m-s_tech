@@ -92,6 +92,7 @@ class DeviceControlActivity(
             }
         }
 
+        //Toast 메세지 출력
         private fun broadcastUpdate(str: String) {
             val mHandler: Handler = object : Handler(Looper.getMainLooper()) {
                 override fun handleMessage(msg: Message) {

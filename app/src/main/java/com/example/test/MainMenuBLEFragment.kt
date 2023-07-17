@@ -196,6 +196,7 @@ class MainMenuBLEFragment : Fragment() {
                         val ble_ssid = dialogView.findViewById<TextView>(R.id.ble_ssid)
                         val ble_pw = dialogView.findViewById<EditText>(R.id.ble_pw)
 
+                        // wifi SSID 가져오기
                         val wifiManager =
                             mContext?.applicationContext?.getSystemService(Context.WIFI_SERVICE) as WifiManager
                         val wifiInfo = wifiManager.connectionInfo

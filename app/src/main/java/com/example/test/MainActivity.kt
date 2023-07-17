@@ -11,10 +11,10 @@ import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
 
-//화면 설정에 대한 기능 구현 파일
+//화면 설정 및 BottomNavigation 의 대한 기능 구현 파일
 class MainActivity : AppCompatActivity() {
 
-    //Fragment를 관리하기 위한 Manager선언
+    //Fragment 를 관리하기 위한 Manager 선언
     private val fragmentManager: FragmentManager = supportFragmentManager
 
     //Fragment 형태인 3개의 스크린을 명시
@@ -31,13 +31,13 @@ class MainActivity : AppCompatActivity() {
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.menu_frame_layout, fragmentChart).commitAllowingStateLoss()
 
-        //BottomNavigation을 이용하여 화면 이동 기능하겠다는 명시
+        //BottomNavigation 을 이용하여 화면 이동 기능하겠다는 명시
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.menu_bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener(ItemSelectedListener())
 
     }
 
-    // BottomNavigation의 각 tab을 클릭했을시 화면 전환과 어떤 xml 레이아웃이 사용될건지 조건문(c에서는 switch와 같음)을 사용하여 스크린 선택함.
+    // BottomNavigation 의 각 tab 을 클릭했을시 화면 전환과 어떤 xml 레이아웃이 사용될건지 조건문(c언어 에서는 switch 와 같음)을 사용하여 스크린 선택함.
     private inner class ItemSelectedListener : BottomNavigationView.OnNavigationItemSelectedListener {
         override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
             val transaction: FragmentTransaction = fragmentManager.beginTransaction()
