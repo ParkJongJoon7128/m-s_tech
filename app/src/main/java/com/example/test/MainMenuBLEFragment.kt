@@ -61,8 +61,6 @@ class MainMenuBLEFragment : Fragment() {
     private var mContext: Context? = null
     private val serviceUUID = UUID.fromString("55e405d2-af9f-a98f-e54a-7dfe43535355")
     private val characteristic_UUID = UUID.fromString("16962447-c623-61ba-d94b-4d1e43535349")
-//    private val characteristic_UUID = UUID.fromString("b39b7234-beec-d4a8-f443-418843535349")
-//    private val characteristic_READ_UUID = UUID.fromString("")
 
     private val mLeScanCallback =
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP) object : ScanCallback() {
@@ -258,8 +256,6 @@ class MainMenuBLEFragment : Fragment() {
         IP_editText = view.findViewById(R.id.IP_editText)
         read_button = view.findViewById(R.id.read_button)
 
-
-
 //        연결된 와이파이 ip 주소 받아오기
         val test_IP = getWifiIpAddress(localContext)
         IP_editText.setText(test_IP)
@@ -288,12 +284,9 @@ class MainMenuBLEFragment : Fragment() {
                             characteristic?.writeType =
                                 BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                             bleGatt?.writeCharacteristic(characteristic)
-
-//                            bleGatt?.readCharacteristic(characteristic)
-                            Toast.makeText(
-                                localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT
-                            ).show()
-                        } else { // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
+                            Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
+                        } else {
+                            // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
                             val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
                             for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
                                 val packetSize =
@@ -304,17 +297,12 @@ class MainMenuBLEFragment : Fragment() {
                                 characteristic?.writeType =
                                     BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                                 bleGatt?.writeCharacteristic(characteristic)
-
-//                                bleGatt?.readCharacteristic(characteristic)
                                 Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
                             }
-                            Toast.makeText(
-                                localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        Toast.makeText(localContext, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(localContext, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: IOException) {
