@@ -279,7 +279,8 @@ class MainMenuBLEFragment : Fragment() {
                         val service = bleGatt?.getService(serviceUUID)
                         val characteristic = service?.getCharacteristic(characteristic_UUID)
 
-                        if (result.size <= 20) { // 20바이트 이하일 때는 그대로 송신
+                        if (result.size <= 20) {
+                            // 20바이트 이하일 때는 그대로 송신
                             characteristic?.value = result
                             characteristic?.writeType =
                                 BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT

@@ -28,10 +28,7 @@ class DeviceControlActivity(
             when (newState) {
                 BluetoothProfile.STATE_CONNECTED -> {
                     Log.i(TAG, "Connected to GATT server.")
-                    Log.i(
-                        TAG,
-                        "Attempting to start service discovery: ${bluetoothGatt?.discoverServices()}"
-                    )
+                    Log.i(TAG, "Attempting to start service discovery: ${bluetoothGatt?.discoverServices()}")
                     gatt?.discoverServices()
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
@@ -110,8 +107,7 @@ class DeviceControlActivity(
         this.device = device
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            bluetoothGatt =
-                device.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
+            bluetoothGatt = device.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
         } else {
             bluetoothGatt = device.connectGatt(context, false, gattCallback)
         }

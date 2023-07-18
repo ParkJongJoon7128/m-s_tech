@@ -51,7 +51,8 @@ class MainMenuWebViewFragment : Fragment() {
             // 결제 시스템 사용 가능하게 기능 구현
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                    if (url == null) return false
+                    if (url == null)
+                        return false
                     if (!url.startsWith("http://") && !url.startsWith("https://")) {
                         if (url.startsWith("intent")) {
                             val schemeIntent: Intent = try {
