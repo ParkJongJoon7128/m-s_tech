@@ -120,33 +120,3 @@
         </activity>
     </application>
 </manifest>
-
-    <!--        <activity-->
-    <!--            android:name=".DeviceControlActivity"-->
-    <!--            android:exported="false">-->
-    <!--            <meta-data-->
-    <!--                android:name="android.app.lib_name"-->
-    <!--                android:value="" />-->
-    <!--        </activity>-->
-    <!--        <activity-->
-    <!--            android:name=".TestActivity"-->
-    <!--            android:exported="true">-->
-    <!--            <meta-data-->
-    <!--                android:name="android.app.lib_name"-->
-    <!--                android:value="" />-->
-    <!--        </activity>-->
-    <!--        <activity-->
-    <!--            android:name=".BleActivity"-->
-    <!--            android:exported="true">-->
-    <!--            <meta-data-->
-    <!--                android:name="android.app.lib_name"-->
-    <!--                android:value="" />-->
-    <!--        </activity>-->
-    <!--        <activity-->
-    <!--            android:name=".WebviewActivity"-->
-    <!--            android:configChanges="orientation|keyboardHidden|screenSize"-->
-    <!--            android:exported="true">-->
-    <!--            <meta-data-->
-    <!--                android:name="android.app.lib_name"-->
-    <!--                android:value="" />-->
-    <!--        </activity>-->

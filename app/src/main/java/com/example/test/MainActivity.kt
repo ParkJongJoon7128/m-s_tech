@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val fragmentChart: MainMenuChartFragment = MainMenuChartFragment()
     private val fragmentBLE: MainMenuBLEFragment = MainMenuBLEFragment()
     private val fragmentWebView: MainMenuWebViewFragment = MainMenuWebViewFragment()
+    private val fragmentSocket: MainMenuSocketFragment = MainMenuSocketFragment()
 
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_chart -> transaction.replace(R.id.menu_frame_layout, fragmentChart).commitAllowingStateLoss()
                 R.id.menu_ble -> transaction.replace(R.id.menu_frame_layout, fragmentBLE).commitAllowingStateLoss()
                 R.id.menu_webview -> transaction.replace(R.id.menu_frame_layout, fragmentWebView).commitAllowingStateLoss()
+                R.id.menu_socket -> transaction.replace(R.id.menu_frame_layout, fragmentSocket).commitAllowingStateLoss()
             }
 
             return true

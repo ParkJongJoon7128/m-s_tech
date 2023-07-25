@@ -11,6 +11,11 @@
         android:title="BLE 연결" />
 
     <item
+        android:id="@+id/menu_socket"
+        android:icon="@drawable/wifi"
+        android:title="Socket" />
+
+    <item
         android:id="@+id/menu_webview"
         android:icon="@drawable/webview"
         android:title="플랫폼" />
