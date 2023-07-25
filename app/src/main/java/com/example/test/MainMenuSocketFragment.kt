@@ -45,8 +45,8 @@ class MainMenuSocketFragment : Fragment() {
                     Log.d("wifi_ip_test", "서버를 열었습니다.")
                     Log.d("wifi_ip_test", "사용자 접속 대기중...")
 
-                    server?.close()
-                    socket?.close()
+//                    server?.close()
+//                    socket?.close()
 
 //                    socket?.let {
 //                        val input = it.getInputStream()
