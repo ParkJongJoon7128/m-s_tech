@@ -57,7 +57,6 @@ class MainMenuSocketFragment : Fragment() {
                 try {
                     server = ServerSocket(7128)
                     Log.d("wifi_ip_test", "서버를 열었습니다.")
-                    Log.d("wifi_ip_test", "사용자 접속 대기중...")
 
                     socket = server?.accept()
 
