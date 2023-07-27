@@ -375,39 +375,3 @@ class MainMenuBLEFragment : Fragment() {
 
 // BLE 기능 실행시, 탐색하는 시간 간격 기능
 private fun Handler.postDelayed(function: () -> Unit, scanPeriod: Int) {}
-
-// 모바일 데이터 IP 주소 받아오는 기능
-private fun getMobileDataIpAddress(context: Context): String? {
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val networkInfo = connectivityManager.activeNetworkInfo
-
-    if (networkInfo != null && networkInfo.isConnected) {
-        if (networkInfo.type == ConnectivityManager.TYPE_MOBILE) {
-            val ipAddress = networkInfo.extraInfo
-
-            // IP 주소 형식 변환
-            val ipString = ipAddress?.removeSurrounding("\"")
-            return ipString
-        }
-    }
-    return null
-}
-
-// WIFI IP 주소 받아오는 기능
-private fun getWifiIpAddress(context: Context): String {
-    val wifiManager =
-        context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-    val wifiInfo = wifiManager.connectionInfo
-    val ipAddress = wifiInfo.ipAddress
-
-    // IP 주소 형식 변환
-    val ipString = String.format(
-        "%d.%d.%d.%d",
-        ipAddress and 0xff,
-        ipAddress shr 8 and 0xff,
-        ipAddress shr 16 and 0xff,
-        ipAddress shr 24 and 0xff
-    )
-    return ipString
-}

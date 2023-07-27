@@ -2,6 +2,7 @@ package com.example.test
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.AsyncTask
 import android.os.Bundle
@@ -136,4 +137,22 @@ private fun getWifiIpAddress(context: Context): String {
         ipAddress shr 24 and 0xff
     )
     return ipString
+}
+
+// 모바일 데이터 IP 주소 받아오는 기능
+private fun getMobileDataIpAddress(context: Context): String? {
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val networkInfo = connectivityManager.activeNetworkInfo
+
+    if (networkInfo != null && networkInfo.isConnected) {
+        if (networkInfo.type == ConnectivityManager.TYPE_MOBILE) {
+            val ipAddress = networkInfo.extraInfo
+
+            // IP 주소 형식 변환
+            val ipString = ipAddress?.removeSurrounding("\"")
+            return ipString
+        }
+    }
+    return null
 }
