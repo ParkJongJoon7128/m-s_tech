@@ -55,7 +55,7 @@ class MainMenuSocketFragment : Fragment() {
 
             Thread {
                 try {
-                    server = ServerSocket(7128)
+                    server = ServerSocket(8211)
                     Log.d("wifi_ip_test", "서버를 열었습니다.")
 
                     socket = server?.accept()
@@ -68,7 +68,7 @@ class MainMenuSocketFragment : Fragment() {
                     socket?.close()
                     server?.close()
 
-                    Log.d("data", "단말기로부터 받은 데이터: $InputStringData")
+                    Log.d("wifi_ip_test", "단말기로부터 받은 데이터: $InputStringData")
 
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -98,7 +98,7 @@ class MainMenuSocketFragment : Fragment() {
     inner class SocketAsyncTask: AsyncTask<Void, Void, String>() {
         override fun doInBackground(vararg params: Void?): String {
            try {
-               socket = Socket(getWifiIpAddress(localContext), 7128)
+               socket = Socket(getWifiIpAddress(localContext), 8211)
 
                val output = socket?.getOutputStream()
                val dataOutputStream = DataOutputStream(output)
