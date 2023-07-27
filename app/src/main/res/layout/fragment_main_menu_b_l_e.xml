@@ -50,39 +50,6 @@
             android:textSize="10dp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/read_button"
-            android:layout_width="80dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/blescreen_readbutton"
-            android:text="READ"
-            android:textColor="@color/white"
-            android:textSize="10dp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <Button
-            android:id="@+id/IP_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="데이터 전송" />
-
-        <EditText
-            android:id="@+id/IP_editText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="단말기로 보낼 데이터 입력"
-            android:maxLines="1"
-            android:singleLine="true" />
     </LinearLayout>
 
 

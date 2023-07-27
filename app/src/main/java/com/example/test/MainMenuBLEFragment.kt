@@ -34,10 +34,6 @@ import java.util.*
 class MainMenuBLEFragment : Fragment() {
     private lateinit var localContext: MainActivity
 
-    private lateinit var IP_button: Button
-    private lateinit var IP_editText: EditText
-    private lateinit var read_button: Button
-
     private lateinit var bluetooth_button: ToggleButton
     private lateinit var scan_button: Button
     private lateinit var disconnect_button: Button
@@ -151,9 +147,6 @@ class MainMenuBLEFragment : Fragment() {
                     bluetooth_button.isChecked = true
                     scan_button.isVisible = false
                     disconnect_button.isVisible = false
-                    IP_button.isVisible = false
-                    IP_editText.isVisible = false
-                    read_button.isVisible = false
                 } else {
                     requestPermissions(permissions, REQUEST_PERMISSIONS_ALL)
                     Toast.makeText(localContext, "Permissions must be granted", Toast.LENGTH_SHORT)
@@ -161,9 +154,6 @@ class MainMenuBLEFragment : Fragment() {
                     bluetooth_button.isChecked = true
                     scan_button.isVisible = false
                     disconnect_button.isVisible = false
-                    IP_button.isVisible = false
-                    IP_editText.isVisible = false
-                    read_button.isVisible = false
                 }
             }
         }
@@ -251,80 +241,6 @@ class MainMenuBLEFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_main_menu_b_l_e, container, false)
-
-        IP_button = view.findViewById(R.id.IP_button)
-        IP_editText = view.findViewById(R.id.IP_editText)
-        read_button = view.findViewById(R.id.read_button)
-
-//        연결된 와이파이 ip 주소 받아오기
-        val test_IP = getWifiIpAddress(localContext)
-        IP_editText.setText(test_IP)
-
-
-//        모바일 데이터 ip 주소
-//        val test_IP = getMobileDataIpAddress(localContext).toString()
-//        IP_editText.setText(test_IP)
-
-        // 와이파이 IP or 모바일 데이터 IP를 핸드폰에서 단말기로 보내는 기능
-        IP_button.setOnClickListener {
-            try {
-                if (test_IP.isNullOrEmpty()) {
-                    Toast.makeText(localContext, "값을 입력하고 버튼을 눌러주세요", Toast.LENGTH_SHORT).show()
-                } else {
-                    if (bleGatt != null && bleGatt?.connect() == true) {
-                        val CR = "\r"
-                        val LF = "\n"
-
-                        val result = (test_IP + CR + LF).toByteArray()
-                        val service = bleGatt?.getService(serviceUUID)
-                        val characteristic = service?.getCharacteristic(characteristic_UUID)
-
-                        if (result.size <= 20) {
-                            // 20바이트 이하일 때는 그대로 송신
-                            characteristic?.value = result
-                            characteristic?.writeType =
-                                BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-                            bleGatt?.writeCharacteristic(characteristic)
-                            Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
-                        } else {
-                            // 20바이트보다 크면 패킷으로 분할하여 여러 번 송신
-                            val numPackets = (result.size + 19) / 20 // 전체 패킷 개수 계산
-                            for (i in 0 until numPackets) { // 패킷 단위로 분할하여 여러 번 송신
-                                val packetSize =
-                                    if (i < numPackets - 1) 20 else result.size % 20 // 패킷 크기 계산
-                                val packet =
-                                    result.copyOfRange(i * 20, i * 20 + packetSize) // 패킷 복사
-                                characteristic?.value = packet
-                                characteristic?.writeType =
-                                    BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-                                bleGatt?.writeCharacteristic(characteristic)
-                                Thread.sleep(10) // 패킷 간 간격을 두어 충돌을 방지합니다.
-                            }
-                            Toast.makeText(localContext, IP_editText.text.toString(), Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        Toast.makeText(localContext, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: IOException) {
-                Toast.makeText(localContext, e.message, Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        // READ 버튼 클릭시, 단말기가 핸드폰으로 보내는 데이터를 받아와 읽는 기능
-        read_button.setOnClickListener {
-            if (bleGatt != null && bleGatt?.connect() == true) {
-                val service = bleGatt?.getService(serviceUUID)
-                val characteristic = service?.getCharacteristic(characteristic_UUID)
-
-                bleGatt?.setCharacteristicNotification(characteristic, true)
-                bleGatt?.readCharacteristic(characteristic)
-                Toast.makeText(localContext, bleGatt?.readCharacteristic(characteristic).toString(), Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(localContext, "단말기와 연결이 되어있지 않습니다", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         return view
     }
 
@@ -351,16 +267,10 @@ class MainMenuBLEFragment : Fragment() {
                 bluetooth_button.isChecked = true
                 scan_button.isVisible = false
                 disconnect_button.isVisible = false
-                IP_button.isVisible = false
-                IP_editText.isVisible = false
-                read_button.isVisible = false
             } else {
                 bluetooth_button.isChecked = false
                 scan_button.isVisible = true
                 disconnect_button.isVisible = true
-                IP_button.isVisible = true
-                IP_editText.isVisible = true
-                read_button.isVisible = true
             }
         }
 
@@ -377,30 +287,6 @@ class MainMenuBLEFragment : Fragment() {
                 //visible일 경우 다른 버튼도 visible 형태로 보여지게 됨.
                 //invisible일 경우 다른 버튼도 invisible 형태로 안보여지게 됨.
             disconnect_button.visibility = if (disconnect_button.visibility == View.VISIBLE) {
-                View.INVISIBLE
-            } else {
-                View.VISIBLE
-            }
-
-                //visible일 경우 다른 버튼도 visible 형태로 보여지게 됨.
-                //invisible일 경우 다른 버튼도 invisible 형태로 안보여지게 됨.
-            IP_button.visibility = if (IP_button.visibility == View.VISIBLE) {
-                View.INVISIBLE
-            } else {
-                View.VISIBLE
-            }
-
-                //visible일 경우 다른 버튼도 visible 형태로 보여지게 됨.
-                //invisible일 경우 다른 버튼도 invisible 형태로 안보여지게 됨.
-            IP_editText.visibility = if (IP_editText.visibility == View.VISIBLE) {
-                View.INVISIBLE
-            } else {
-                View.VISIBLE
-            }
-
-                //visible일 경우 다른 버튼도 visible 형태로 보여지게 됨.
-                //invisible일 경우 다른 버튼도 invisible 형태로 안보여지게 됨.
-            read_button.visibility = if (read_button.visibility == View.VISIBLE) {
                 View.INVISIBLE
             } else {
                 View.VISIBLE
