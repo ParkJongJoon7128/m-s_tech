@@ -5,4 +5,5 @@
 
 # 사용기술
 - Android
+- Kotlin
 - BLE
